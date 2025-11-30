@@ -1,0 +1,12 @@
+[
+  {
+    "caminho": "../backend/config",
+    "arquivo": "connection.js",
+    "conteudo": "const { Sequelize } = require('sequelize');\n\nconst sequelize = new Sequelize('petropolitan_lab', 'bruxao', 'bruxao123', {\n  host: 'localhost',\n  port: 5432,\n  dialect: 'postgres',\n  logging: false,\n});\n\nasync function testarConexao() {\n  try {\n    await sequelize.authenticate();\n    console.log('🔥 Banco de dados conectado com sucesso!');\n  } catch (error) {\n    console.error('❌ Erro ao conectar no banco:', error.message);\n  }\n}\n\ntestarConexao();\n\nmodule.exports = sequelize;"
+  },
+  {
+    "caminho": "../backend",
+    "arquivo": "app.js",
+    "conteudo": "const express = require('express');\nconst path = require('path');\nconst app = express();\n\napp.use(express.json());\napp.use(express.urlencoded({ extended: true }));\n\n// Arquivos estáticos\napp.use(express.static(path.join(__dirname, 'public')));\n\n// Rota inicial simples (placeholder)\napp.get('/', (req, res) => {\n  res.send('<h1>🔥 Servidor PBQE-C rodando!</h1>');\n});\n\nconst PORT = 3000;\napp.listen(PORT, () => console.log(`🔥 Servidor rodando na porta ${PORT}`));\n\nmodule.exports = app;"
+  }
+]
