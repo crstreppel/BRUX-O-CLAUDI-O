@@ -1,0 +1,17 @@
+[
+  {
+    "caminho": "../backend/config",
+    "arquivo": ".keep",
+    "conteudo": "."
+  },
+  {
+    "caminho": "../backend/modules",
+    "arquivo": ".keep",
+    "conteudo": "."
+  },
+  {
+    "caminho": "../backend/public",
+    "arquivo": ".keep",
+    "conteudo": "."
+  }
+]
