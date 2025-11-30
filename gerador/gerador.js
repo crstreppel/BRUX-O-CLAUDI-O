@@ -2,24 +2,12 @@
 
 /**
  * =============================================================
- * 🧙‍♂️ gerador.js • Petropolitan Lab – PBQE-C™
+ * 🧙‍♂️ gerador.js • PBQE-C Lab – Versão com Arquivamento de JSON
  * -------------------------------------------------------------
- * Gerador simples de módulos.
- * 
- * Ele recebe um arquivo JSON como parâmetro:
- * node gerador.js moduloUsuarios.json
- *
- * O JSON contém:
- *  - caminho (string)        → caminho completo da pasta onde criar o arquivo
- *  - arquivo (string)        → nome do arquivo, ex: usuariosModel.js
- *  - conteudo (string)       → conteúdo inteiro do arquivo
- *  - dependencias (array)    → ["axios", "jsonwebtoken"] (opcional)
- *
- * O gerador:
- *  1) Lê o JSON
- *  2) Cria as pastas necessárias
- *  3) Cria o arquivo
- *  4) Instala dependências, se existirem
+ * ✔ Cria pastas
+ * ✔ Cria arquivos
+ * ✔ Instala dependências (opcional)
+ * ✔ E AO FINAL move o JSON executado para /jsons
  * =============================================================
  */
 
@@ -28,11 +16,11 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 // -------------------------------------------------------------
-// Verifica se o arquivo JSON foi informado
+// Verifica se recebeu o JSON como parâmetro
 // -------------------------------------------------------------
 if (process.argv.length < 3) {
   console.error('❌ Arquivo JSON não informado.');
-  console.error('Execute: node gerador.js nomeDoArquivo.json');
+  console.error('Execute: node gerador.js nome.json');
   process.exit(1);
 }
 
@@ -57,18 +45,15 @@ try {
   process.exit(1);
 }
 
-// -------------------------------------------------------------
-// O JSON pode ser um objeto único ou um array de objetos
-// padroniza para sempre trabalhar como array
-// -------------------------------------------------------------
+// Padroniza: sempre array
 const itens = Array.isArray(dados) ? dados : [dados];
 
 console.log('============================================================');
-console.log('🧙‍♂️  Iniciando Gerador PBQE-C (modo Maria Fumaça)');
+console.log('🧙‍♂️ Iniciando Gerador PBQE-C (modo Maria Fumaça)');
 console.log('============================================================\n');
 
 // -------------------------------------------------------------
-// Função: garante que a pasta exista
+// Garante pasta
 // -------------------------------------------------------------
 function garantirPasta(dirPath) {
   if (!fs.existsSync(dirPath)) {
@@ -78,7 +63,7 @@ function garantirPasta(dirPath) {
 }
 
 // -------------------------------------------------------------
-// Função: escreve o arquivo
+// Cria o arquivo
 // -------------------------------------------------------------
 function criarArquivo(caminhoArquivo, conteudo) {
   fs.writeFileSync(caminhoArquivo, conteudo, 'utf8');
@@ -86,7 +71,7 @@ function criarArquivo(caminhoArquivo, conteudo) {
 }
 
 // -------------------------------------------------------------
-// Função: instala dependências
+// Instala dependências
 // -------------------------------------------------------------
 function instalarDependencias(lista) {
   if (!Array.isArray(lista) || lista.length === 0) return;
@@ -94,7 +79,7 @@ function instalarDependencias(lista) {
   console.log('\n📦 Instalando dependências...');
   try {
     execSync(`npm install ${lista.join(' ')}`, { stdio: 'inherit' });
-    console.log('✔ Dependências instaladas com sucesso.');
+    console.log('✔ Dependências instaladas.');
   } catch (err) {
     console.error('❌ Erro ao instalar dependências:');
     console.error(err.message);
@@ -102,12 +87,12 @@ function instalarDependencias(lista) {
 }
 
 // -------------------------------------------------------------
-// PROCESSA CADA ITEM DO JSON
+// PROCESSA CADA ITEM
 // -------------------------------------------------------------
 for (const item of itens) {
   const { caminho, arquivo, conteudo, dependencias } = item;
 
-  if (!caminho || !arquivo || !conteudo) {
+  if (!caminho || !arquivo || conteudo === undefined) {
     console.error('❌ Item inválido no JSON. Deve ter: caminho, arquivo, conteudo.');
     continue;
   }
@@ -115,19 +100,40 @@ for (const item of itens) {
   console.log('\n------------------------------------------------------------');
   console.log(`📦 Processando item: ${arquivo}`);
 
-  // Criar pasta
   garantirPasta(caminho);
 
-  // Criar arquivo
   const caminhoCompleto = path.join(caminho, arquivo);
   criarArquivo(caminhoCompleto, conteudo);
 
-  // Instalar dependências (se existirem)
   if (dependencias && dependencias.length > 0) {
     instalarDependencias(dependencias);
   }
 }
 
+// -------------------------------------------------------------
+// Move o JSON executado para /jsons
+// -------------------------------------------------------------
+console.log('\n📚 Arquivando JSON executado...');
+
+const pastaJsons = path.join(__dirname, 'jsons');
+
+try {
+  // garante pasta jsons
+  if (!fs.existsSync(pastaJsons)) {
+    fs.mkdirSync(pastaJsons, { recursive: true });
+    console.log(`📁 Pasta criada: ${pastaJsons}`);
+  }
+
+  const nomeJson = path.basename(jsonPath);
+  const destino = path.join(pastaJsons, nomeJson);
+
+  fs.renameSync(jsonPath, destino);
+  console.log(`📦 JSON movido para: ${destino}`);
+
+} catch (err) {
+  console.error('❌ Erro ao mover JSON para pasta jsons:', err.message);
+}
+
 console.log('\n============================================================');
-console.log('🏁 Gerador PBQE-C finalizado com sucesso.');
+console.log('🏁 Gerador PBQE-C finalizado.');
 console.log('============================================================\n');
