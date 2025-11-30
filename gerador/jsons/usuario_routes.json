@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend/modules/usuarios",
+    "arquivo": "usuarioRoutes.js",
+    "conteudo": "const express = require('express');\nconst router = express.Router();\n\nconst controller = require('./usuarioController');\n\n// =============================================================\n// Rotas do módulo Usuarios (Maria Fumaça PBQE-C)\n// =============================================================\n\n// Cadastro\nrouter.post('/cadastrar', controller.cadastrarUsuario);\n\n// Login\nrouter.post('/login', controller.loginUsuario);\n\nmodule.exports = router;"
+  }
+]

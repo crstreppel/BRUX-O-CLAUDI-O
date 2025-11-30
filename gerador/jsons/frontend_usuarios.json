@@ -1,0 +1,31 @@
+[
+  {
+    "caminho": "../backend/public/modules/usuarios",
+    "arquivo": "style.css",
+    "conteudo": "body {\n  background: #2b1d0f;\n  color: #f8d9a0;\n  font-family: Arial, sans-serif;\n  text-align: center;\n  padding-top: 50px;\n}\n\n.container {\n  background: #3a2714;\n  padding: 20px;\n  border-radius: 10px;\n  width: 350px;\n  margin: 0 auto;\n  box-shadow: 0 0 15px #000;\n}\n\ninput {\n  width: 90%;\n  padding: 10px;\n  border-radius: 5px;\n  border: none;\n  margin-bottom: 10px;\n}\n\nbutton {\n  background: #b5651d;\n  color: white;\n  border: none;\n  padding: 10px 20px;\n  cursor: pointer;\n  border-radius: 5px;\n  font-weight: bold;\n}\n\nbutton:hover {\n  background: #c27a34;\n}\n\n.fire {\n  font-size: 60px;\n  animation: flicker 0.3s infinite alternate;\n}\n\n@keyframes flicker {\n  from { text-shadow: 0 0 10px #ff4500; }\n  to { text-shadow: 0 0 20px #ffae42; }\n}"
+  },
+
+  {
+    "caminho": "../backend/public/modules/usuarios",
+    "arquivo": "usuarios.js",
+    "conteudo": "async function cadastrarUsuario() {\n  const usuario = document.getElementById('usuario').value;\n  const senha = document.getElementById('senha').value;\n\n  const resp = await fetch('/usuarios', {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({ usuario, senha })\n  });\n\n  if (resp.ok) {\n    alert('Usuário cadastrado!');\n    window.location.href = 'login.html';\n  } else {\n    alert('Erro ao cadastrar');\n  }\n}\n\nasync function logarUsuario() {\n  const usuario = document.getElementById('usuario').value;\n  const senha = document.getElementById('senha').value;\n\n  const resp = await fetch('/usuarios/login', {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({ usuario, senha })\n  });\n\n  if (resp.ok) {\n    window.location.href = 'fogo.html';\n  } else {\n    alert('Usuário ou senha incorretos.');\n  }\n}"
+  },
+
+  {
+    "caminho": "../backend/public/modules/usuarios",
+    "arquivo": "cadastro.html",
+    "conteudo": "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset='UTF-8'>\n  <link rel='stylesheet' href='style.css'>\n  <title>Cadastro - Tribo do Fogo</title>\n</head>\n<body>\n  <div class='container'>\n    <h1>🔥 Cadastro da Tribo 🔥</h1>\n    <input id='usuario' type='text' placeholder='Nome do guerreiro'>\n    <input id='senha' type='password' placeholder='Senha secreta'>\n    <button onclick='cadastrarUsuario()'>Cadastrar</button>\n    <br><br>\n    <a href='login.html'>Já é da tribo? Entrar</a>\n  </div>\n  <script src='usuarios.js'></script>\n</body>\n</html>"
+  },
+
+  {
+    "caminho": "../backend/public/modules/usuarios",
+    "arquivo": "login.html",
+    "conteudo": "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset='UTF-8'>\n  <link rel='stylesheet' href='style.css'>\n  <title>Login - Tribo do Fogo</title>\n</head>\n<body>\n  <div class='container'>\n    <h1>🔥 Entrada da Caverna 🔥</h1>\n    <input id='usuario' type='text' placeholder='Guerreiro'>\n    <input id='senha' type='password' placeholder='Senha da caverna'>\n    <button onclick='logarUsuario()'>Entrar</button>\n    <br><br>\n    <a href='cadastro.html'>Ainda não é da tribo? Cadastrar</a>\n  </div>\n  <script src='usuarios.js'></script>\n</body>\n</html>"
+  },
+
+  {
+    "caminho": "../backend/public/modules/usuarios",
+    "arquivo": "fogo.html",
+    "conteudo": "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset='UTF-8'>\n  <link rel='stylesheet' href='style.css'>\n  <title>FOGO DESCOBERTO</title>\n</head>\n<body>\n  <div class='container'>\n    <h1 class='fire'>🔥🔥🔥</h1>\n    <h2>VOCÊ DESCOBRIU O FOGO!</h2>\n    <p>A tribo celebra sua vitória!</p>\n  </div>\n</body>\n</html>"
+  }
+]

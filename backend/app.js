@@ -8,7 +8,11 @@ app.use(express.urlencoded({ extended: true }));
 // Arquivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Rota inicial simples (placeholder)
+// Rotas
+const usuariosRoutes = require('./modules/usuarios/usuarioRoutes');
+app.use('/usuarios', usuariosRoutes);
+
+// Rota inicial
 app.get('/', (req, res) => {
   res.send('<h1>🔥 Servidor PBQE-C rodando!</h1>');
 });

@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend",
+    "arquivo": ".sequelizerc",
+    "conteudo": "const path = require('path');\n\nmodule.exports = {\n  config: path.resolve(__dirname, 'config', 'config.json'),\n  'migrations-path': path.resolve(__dirname, 'migrations'),\n  'models-path': path.resolve(__dirname, 'models'),\n  'seeders-path': path.resolve(__dirname, 'seeders')\n};"
+  }
+]

@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend/config",
+    "arquivo": "connection.js",
+    "conteudo": "const { Sequelize } = require('sequelize');\n\n// =============================================================\n// 🔥 Conexão PBQE-C com Postgres (modo Maria Fumaça)\n// =============================================================\n\nconst sequelize = new Sequelize('petropolitan_lab', 'bruxao', 'bruxao123', {\n  host: 'localhost',\n  port: 5432,\n  dialect: 'postgres',\n  logging: false // deixa o console limpo\n});\n\n// Testa a conexão automaticamente\n(async () => {\n  try {\n    await sequelize.authenticate();\n    console.log('🔥 Banco de dados conectado com sucesso!');\n\n    // Sincroniza modelos → cria/ajusta tabelas\n    await sequelize.sync({ alter: true });\n    console.log('🔥 Tabelas sincronizadas (alter mode).');\n\n  } catch (error) {\n    console.error('❌ Erro ao conectar no banco:', error.message);\n  }\n})();\n\nmodule.exports = sequelize;"
+  }
+]

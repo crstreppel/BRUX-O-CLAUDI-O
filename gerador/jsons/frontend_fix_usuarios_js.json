@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend/public/modules/usuarios",
+    "arquivo": "usuarios.js",
+    "conteudo": "async function cadastrarUsuario() {\n  const usuario = document.getElementById('usuario').value;\n  const senha = document.getElementById('senha').value;\n\n  const resp = await fetch('/usuarios/cadastrar', {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({ usuario, senha })\n  });\n\n  if (resp.ok) {\n    alert('Usuário cadastrado!');\n    window.location.href = 'login.html';\n  } else {\n    alert('Erro ao cadastrar');\n  }\n}\n\nasync function logarUsuario() {\n  const usuario = document.getElementById('usuario').value;\n  const senha = document.getElementById('senha').value;\n\n  const resp = await fetch('/usuarios/login', {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({ usuario, senha })\n  });\n\n  if (resp.ok) {\n    window.location.href = 'fogo.html';\n  } else {\n    alert('Usuário ou senha incorretos.');\n  }\n}"
+  }
+]
