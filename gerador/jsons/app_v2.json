@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend",
+    "arquivo": "app.js",
+    "conteudo": "const express = require('express');\nconst path = require('path');\nconst app = express();\n\napp.use(express.json());\napp.use(express.urlencoded({ extended: true }));\n\n// Arquivos estáticos\napp.use(express.static(path.join(__dirname, 'public')));\n\n// Rotas de API (PBQE-C)\nconst usuariosRoutes = require('./modules/usuarios/usuariosRoutes');\napp.use('/api/usuarios', usuariosRoutes);\n\n// Rota inicial\napp.get('/', (req, res) => {\n  res.send('<h1>🔥 Servidor PBQE-C rodando!</h1>');\n});\n\nconst PORT = 3000;\napp.listen(PORT, () => console.log(`🔥 Servidor rodando na porta ${PORT}`));\n\nmodule.exports = app;"
+  }
+]

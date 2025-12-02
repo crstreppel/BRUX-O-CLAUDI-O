@@ -1,0 +1,33 @@
+{
+  "tipo": "PBQE-C_JSON_SENTINELA",
+  "modulo": "usuarios_routes",
+  "descricao": "Rotas oficiais PBQE-C V2 do módulo de usuários.",
+  "prefixo": "/api/usuarios",
+  "rotas": [
+    {
+      "metodo": "POST",
+      "caminho": "/cadastrar",
+      "handler": "cadastrarUsuario"
+    },
+    {
+      "metodo": "POST",
+      "caminho": "/login",
+      "handler": "loginUsuario"
+    },
+    {
+      "metodo": "GET",
+      "caminho": "/confirmar-email",
+      "handler": "confirmarEmailPorToken"
+    },
+    {
+      "metodo": "POST",
+      "caminho": "/confirmar-codigo",
+      "handler": "confirmarEmailPorCodigo"
+    },
+    {
+      "metodo": "POST",
+      "caminho": "/reenviar-confirmacao",
+      "handler": "reenviarConfirmacao"
+    }
+  ]
+}

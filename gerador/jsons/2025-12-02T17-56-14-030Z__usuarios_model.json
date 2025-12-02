@@ -1,0 +1,23 @@
+{
+  "tipo": "PBQE-C_JSON_SENTINELA",
+  "modulo": "usuarios_model",
+  "model": {
+    "tabela": "usuarios",
+    "campos": {
+      "id": "UUID",
+      "usuario": "STRING(50)",
+      "email": "STRING(255)",
+      "senhaHash": "STRING(200)",
+      "emailVerificado": "BOOLEAN",
+      "emailToken": "STRING(200)",
+      "emailTokenExpiraEm": "DATE",
+      "emailCodigo": "STRING(6)",
+      "emailCodigoTentativas": "INTEGER",
+      "statusId": "UUID",
+      "ativo": "BOOLEAN",
+      "deletedAt": "DATE",
+      "createdAt": "DATE",
+      "updatedAt": "DATE"
+    }
+  }
+}

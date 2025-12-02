@@ -1,0 +1,5 @@
+# PBQE-C Keyphrase Gatekeeper
+
+Coloque abaixo apenas a sua palavra-chave de autorização:
+
+toca ficha

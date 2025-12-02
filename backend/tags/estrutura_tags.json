@@ -1,0 +1,10 @@
+{
+  "id": "string",
+  "data": "YYYY-MM-DD",
+  "titulo": "string",
+  "versao": "string",
+  "conteudo": [
+    "string",
+    "..."
+  ]
+}

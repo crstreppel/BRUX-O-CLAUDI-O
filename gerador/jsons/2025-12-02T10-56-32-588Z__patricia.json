@@ -1,0 +1,18 @@
+{
+  "pageName": "patricia",
+  "type": "modulo_simples",
+  "description": "Página especial para Pati — Feliz 35 anos de casados",
+  "folders": [
+    "backend/patricia"
+  ],
+  "files": [
+    {
+      "path": "backend/patricia/index.html",
+      "content": "<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>Feliz 35 Anos de Casados</title>\n  <link rel=\"stylesheet\" href=\"estilo.css\" />\n</head>\n<body>\n  <div class=\"container\">\n    <h1>💛 Feliz 35 Anos de Casados 💛</h1>\n    <p class=\"mensagem\">\n      Pati, este é um pequeno gesto dentro de um mundo inteiro\n      que a gente ainda vai construir juntos.<br>\n      Obrigado por estar ao lado do Claudião nesses 35 anos —\n      de amor, luta, parceria, caos, risada e história bonita.\n    </p>\n    <p class=\"assinatura\">\n      Feito com carinho (e um pouco de magia bruxônica).<br>\n      — Claudião & Bruxão 🧙‍♂️\n    </p>\n  </div>\n</body>\n</html>"
+    },
+    {
+      "path": "backend/patricia/estilo.css",
+      "content": "body {\n  margin: 0;\n  padding: 0;\n  font-family: 'Segoe UI', sans-serif;\n  background: linear-gradient(135deg, #ffe7d9, #ffd1f0);\n  height: 100vh;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n.container {\n  background: #ffffffcc;\n  backdrop-filter: blur(10px);\n  padding: 40px 50px;\n  border-radius: 20px;\n  box-shadow: 0 10px 40px rgba(0,0,0,0.15);\n  text-align: center;\n  max-width: 600px;\n}\n\nh1 {\n  font-size: 2.5rem;\n  margin-bottom: 20px;\n  color: #c05ba8;\n  font-weight: 700;\n  text-shadow: 1px 1px 2px #ffffff;\n}\n\n.mensagem {\n  font-size: 1.2rem;\n  line-height: 1.6;\n  color: #444;\n  margin-bottom: 30px;\n}\n\n.assinatura {\n  font-size: 1rem;\n  color: #666;\n  font-style: italic;\n}"
+    }
+  ]
+}

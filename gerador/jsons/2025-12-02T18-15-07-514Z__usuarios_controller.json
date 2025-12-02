@@ -1,0 +1,27 @@
+{
+  "tipo": "PBQE-C_JSON_SENTINELA",
+  "modulo": "usuarios_controller",
+  "descricao": "Controller oficial PBQE-C V2 do módulo de usuários, com Argon2d e verificação de email.",
+  "funcoes": {
+    "cadastrarUsuario": {
+      "metodo": "POST",
+      "rota": "/api/usuarios/cadastrar"
+    },
+    "loginUsuario": {
+      "metodo": "POST",
+      "rota": "/api/usuarios/login"
+    },
+    "confirmarEmailPorToken": {
+      "metodo": "GET",
+      "rota": "/api/usuarios/confirmar-email"
+    },
+    "confirmarEmailPorCodigo": {
+      "metodo": "POST",
+      "rota": "/api/usuarios/confirmar-codigo"
+    },
+    "reenviarConfirmacao": {
+      "metodo": "POST",
+      "rota": "/api/usuarios/reenviar-confirmacao"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend/modules/usuarios",
+    "arquivo": "usuarioModel.js",
+    "conteudo": "const { DataTypes } = require('sequelize');\nconst sequelize = require('../../config/connection');\n\n// Modelo simples de usuário (Maria Fumaça)\nconst Usuario = sequelize.define('Usuario', {\n  id: {\n    type: DataTypes.INTEGER,\n    primaryKey: true,\n    autoIncrement: true\n  },\n  usuario: {\n    type: DataTypes.STRING(50),\n    allowNull: false,\n    unique: true\n  },\n  email: {\n    type: DataTypes.STRING(255),\n    allowNull: false,\n    unique: true,\n    validate: {\n      isEmail: true\n    }\n  },\n  senha: {\n    type: DataTypes.STRING(200),\n    allowNull: false\n  }\n}, {\n  tableName: 'usuarios',\n  timestamps: true\n});\n\nmodule.exports = Usuario;"
+  }
+]

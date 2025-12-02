@@ -1,0 +1,11 @@
+{
+  "tipo": "PBQE-C_JSON_SENTINELA",
+  "modulo": "usuarios_controller",
+  "funcoes": [
+    "cadastrarUsuario",
+    "loginUsuario",
+    "confirmarEmailPorToken",
+    "confirmarEmailPorCodigo",
+    "reenviarConfirmacao"
+  ]
+}

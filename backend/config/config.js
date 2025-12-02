@@ -1,0 +1,26 @@
+module.exports = {
+  development: {
+    username: "bruxao",
+    password: "bruxao123",
+    database: "petropolitan_lab",
+    host: "localhost",
+    port: 5432,
+    dialect: "postgres"
+  },
+  test: {
+    username: "bruxao",
+    password: "bruxao123",
+    database: "petropolitan_lab_test",
+    host: "localhost",
+    port: 5432,
+    dialect: "postgres"
+  },
+  production: {
+    username: "bruxao",
+    password: "bruxao123",
+    database: "petropolitan_lab_prod",
+    host: "localhost",
+    port: 5432,
+    dialect: "postgres"
+  }
+};

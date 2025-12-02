@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend/config",
+    "arquivo": "connection.js",
+    "conteudo": "const { Sequelize } = require('sequelize');\n\nconst sequelize = new Sequelize('petropolitan_lab', 'bruxao', 'bruxao123', {\n  host: 'localhost',\n  dialect: 'postgres'\n});\n\n(async () => {\n  try {\n    await sequelize.authenticate();\n    console.log('🔥 Banco de dados conectado com sucesso!');\n\n    // PBQE-C MODE: sem alter, sem force. Quem manda é a migration.\n    await sequelize.sync();\n    console.log('🔥 Tabelas sincronizadas (migration mode).');\n  } catch (error) {\n    console.error('❌ Erro ao conectar no banco:', error);\n  }\n})();\n\nmodule.exports = sequelize;"
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "tipo": "PBQE-C_JSON_SENTINELA",
+  "modulo": "usuarios_frontend",
+  "telas": [
+    "cadastro",
+    "login",
+    "verificar_email_enviado",
+    "verificar_codigo",
+    "email_confirmado"
+  ],
+  "arquivoHtml": "usuarios.html",
+  "arquivoJs": "usuarios.js",
+  "arquivoCss": "usuarios.css"
+}

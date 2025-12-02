@@ -11,23 +11,30 @@ module.exports = {
   // -----------------------------------------
   async cadastrarUsuario(req, res) {
     try {
-      const { usuario, senha } = req.body;
+      const { usuario, email, senha } = req.body;
 
-      // validação simples
-      if (!usuario || !senha) {
-        return res.status(400).json({ erro: 'Usuário e senha são obrigatórios.' });
+      if (!usuario || !email || !senha) {
+        return res.status(400).json({ erro: "Faltou preencher usuário, email ou senha. Sem eles não consigo continuar 😅" });
       }
 
-      // verifica se já existe
-      const existe = await Usuario.findOne({ where: { usuario } });
-      if (existe) {
-        return res.status(400).json({ erro: 'Usuário já existe.' });
+      const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!regexEmail.test(email)) {
+        return res.status(400).json({ erro: "Opa, acho que seu email não parece correto. Dá uma conferida por favor 😊" });
       }
 
-      // cria
-      await Usuario.create({ usuario, senha });
+      const usuarioExiste = await Usuario.findOne({ where: { usuario } });
+      if (usuarioExiste) {
+        return res.status(400).json({ erro: "Bah, parece que esse usuário já foi escolhido. Bora tentar outro nome?" });
+      }
 
-      return res.json({ sucesso: true, mensagem: 'Usuário criado com sucesso!' });
+      const emailExiste = await Usuario.findOne({ where: { email } });
+      if (emailExiste) {
+        return res.status(400).json({ erro: "Esse email já tá na nossa lista. Quer tentar outro?" });
+      }
+
+      await Usuario.create({ usuario, email, senha });
+
+      return res.json({ sucesso: true, mensagem: "Usuário criado com sucesso!" });
 
     } catch (error) {
       console.error('Erro no cadastro:', error);
@@ -42,23 +49,20 @@ module.exports = {
     try {
       const { usuario, senha } = req.body;
 
-      // validação
       if (!usuario || !senha) {
-        return res.status(400).json({ erro: 'Usuário e senha são obrigatórios.' });
+        return res.status(400).json({ erro: "Preciso de usuário e senha pra te encontrar direitinho 😉" });
       }
 
-      // busca usuário
       const user = await Usuario.findOne({ where: { usuario } });
 
       if (!user) {
-        return res.status(400).json({ erro: 'Usuário não encontrado.' });
+        return res.status(400).json({ erro: "Bah, procurei aqui nos meus registros e não achei esse usuário 🤔" });
       }
 
       if (user.senha !== senha) {
-        return res.status(400).json({ erro: 'Senha incorreta.' });
+        return res.status(400).json({ erro: "Hmmm… essa senha não bateu com a que tenho aqui. Tenta de novo?" });
       }
 
-      // login ok – isso é LAB, nada sofisticado
       return res.json({ sucesso: true, mensagem: 'Login autorizado!' });
 
     } catch (error) {

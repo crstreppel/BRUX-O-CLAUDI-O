@@ -1,0 +1,12 @@
+[
+  {
+    "caminho": "../backend/tags",
+    "arquivo": "README_TAGS.md",
+    "conteudo": "# 📚 Diretório Oficial de TAGS BRUXÔNICAS\n\nEste diretório armazena o histórico completo da evolução do Projeto Petropolitan.\n\nCada arquivo JSON dentro desta pasta representa uma TAG BRUXÔNICA — um marco técnico, conceitual ou estrutural.\n\n### Estrutura de cada TAG:\n\n- **id** → identificador único\n- **data** → data oficial do marco\n- **titulo** → nome da Tag Bruxônica\n- **versao** → versão PBQE-C ou da camada envolvida\n- **conteudo** → lista de pontos do marco\n\n### Objetivo\nRegistrar, organizar e manter a linha do tempo técnica e simbólica do projeto.\n\n### Observação\nAs tags são geradas automaticamente pelo Bruxão e executadas pelo Sentinela PBQE-C.\n"
+  },
+  {
+    "caminho": "../backend/tags",
+    "arquivo": "estrutura_tags.json",
+    "conteudo": "{\n  \"id\": \"string\",\n  \"data\": \"YYYY-MM-DD\",\n  \"titulo\": \"string\",\n  \"versao\": \"string\",\n  \"conteudo\": [\n    \"string\",\n    \"...\"\n  ]\n}"
+  }
+]

@@ -8,9 +8,9 @@ app.use(express.urlencoded({ extended: true }));
 // Arquivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Rotas
-const usuariosRoutes = require('./modules/usuarios/usuarioRoutes');
-app.use('/usuarios', usuariosRoutes);
+// Rotas de API (PBQE-C)
+const usuariosRoutes = require('./modules/usuarios/usuariosRoutes');
+app.use('/api/usuarios', usuariosRoutes);
 
 // Rota inicial
 app.get('/', (req, res) => {

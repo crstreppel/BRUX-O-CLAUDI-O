@@ -1,0 +1,72 @@
+{
+  "tipo": "PBQE-C_JSON_SENTINELA",
+  "modulo": "usuarios_model",
+  "descricao": "Model oficial PBQE-C V2 do módulo de usuários.",
+  "tabela": "usuarios",
+  "paranoid": true,
+  "timestamps": true,
+  "underscored": true,
+  "campos": {
+    "id": {
+      "tipo": "UUID",
+      "primaryKey": true,
+      "defaultValue": "UUIDV4"
+    },
+    "usuario": {
+      "tipo": "STRING(50)",
+      "unique": true,
+      "allowNull": false
+    },
+    "email": {
+      "tipo": "STRING(255)",
+      "unique": true,
+      "allowNull": false,
+      "validacoes": [
+        "isEmail"
+      ]
+    },
+    "senhaHash": {
+      "tipo": "STRING(200)",
+      "allowNull": false,
+      "descricao": "Hash Argon2d"
+    },
+    "emailVerificado": {
+      "tipo": "BOOLEAN",
+      "defaultValue": false
+    },
+    "emailToken": {
+      "tipo": "STRING(200)",
+      "allowNull": true
+    },
+    "emailTokenExpiraEm": {
+      "tipo": "DATE",
+      "allowNull": true
+    },
+    "emailCodigo": {
+      "tipo": "STRING(6)",
+      "allowNull": true
+    },
+    "emailCodigoTentativas": {
+      "tipo": "INTEGER",
+      "defaultValue": 0
+    },
+    "statusId": {
+      "tipo": "UUID",
+      "allowNull": true
+    },
+    "ativo": {
+      "tipo": "BOOLEAN",
+      "defaultValue": true
+    },
+    "deletedAt": {
+      "tipo": "DATE",
+      "allowNull": true
+    },
+    "createdAt": {
+      "tipo": "DATE"
+    },
+    "updatedAt": {
+      "tipo": "DATE"
+    }
+  }
+}

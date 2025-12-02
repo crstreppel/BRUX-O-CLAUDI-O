@@ -1,0 +1,26 @@
+{
+  "tipo": "PBQE-C_JSON_SENTINELA",
+  "modulo": "usuarios_routes",
+  "rotas": [
+    {
+      "metodo": "POST",
+      "caminho": "/cadastrar"
+    },
+    {
+      "metodo": "POST",
+      "caminho": "/login"
+    },
+    {
+      "metodo": "GET",
+      "caminho": "/confirmar-email"
+    },
+    {
+      "metodo": "POST",
+      "caminho": "/confirmar-codigo"
+    },
+    {
+      "metodo": "POST",
+      "caminho": "/reenviar-confirmacao"
+    }
+  ]
+}
