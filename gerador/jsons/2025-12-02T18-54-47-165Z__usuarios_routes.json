@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "backend/modules/usuarios",
+    "arquivo": "usuariosRoutes.js",
+    "conteudo": "// ======================================================================\n// 🧙‍♂️ usuariosRoutes.js • PBQE-C V2 – Módulo Usuários\n// ----------------------------------------------------------------------\nconst express = require('express');\nconst router = express.Router();\nconst controller = require('./usuarioController');\n\nrouter.post('/cadastrar', controller.cadastrarUsuario);\nrouter.post('/login', controller.loginUsuario);\nrouter.get('/confirmar-email', controller.confirmarEmailPorToken);\nrouter.post('/confirmar-codigo', controller.confirmarEmailPorCodigo);\nrouter.post('/reenviar-confirmacao', controller.reenviarConfirmacao);\n\nmodule.exports = router;\n"
+  }
+]

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Módulo Usuários • PBQE-C Lab</title>
+  <link rel="stylesheet" href="usuarios.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <h1>Módulo de Usuários</h1>
+      <p class="subtitle">Cadastro e login com email validado • PBQE-C Clean Light</p>
+    </header>
+
+    <main class="grid">
+      <!-- Card de Cadastro -->
+      <section class="card">
+        <h2>Cadastro</h2>
+        <p class="card-desc">Crie um usuário com email e senha para acessar o sistema.</p>
+
+        <div class="field">
+          <label for="cad-usuario">Usuário</label>
+          <input id="cad-usuario" type="text" placeholder="Seu usuário" />
+        </div>
+
+        <div class="field">
+          <label for="cad-email">Email</label>
+          <input id="cad-email" type="email" placeholder="voce@exemplo.com" />
+        </div>
+
+        <div class="field">
+          <label for="cad-senha">Senha</label>
+          <input id="cad-senha" type="password" placeholder="Sua senha" />
+        </div>
+
+        <button type="button" class="btn primary" onclick="cadastrarUsuario()">
+          Cadastrar Usuário
+        </button>
+
+        <div id="cad-msg" class="msg"></div>
+      </section>
+
+      <!-- Card de Login -->
+      <section class="card">
+        <h2>Login</h2>
+        <p class="card-desc">Acesse usando o usuário e a senha cadastrados.</p>
+
+        <div class="field">
+          <label for="login-usuario">Usuário</label>
+          <input id="login-usuario" type="text" placeholder="Seu usuário" />
+        </div>
+
+        <div class="field">
+          <label for="login-senha">Senha</label>
+          <input id="login-senha" type="password" placeholder="Sua senha" />
+        </div>
+
+        <button type="button" class="btn secondary" onclick="loginUsuario()">
+          Entrar
+        </button>
+
+        <div id="login-msg" class="msg"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="usuarios.js"></script>
+</body>
+</html>

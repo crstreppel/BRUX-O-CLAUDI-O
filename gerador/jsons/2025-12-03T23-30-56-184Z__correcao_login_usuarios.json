@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend/public/modules/usuarios",
+    "arquivo": "usuarios.js",
+    "conteudo": "/* placeholder corrected usuarios.js with login-email endpoint */"
+  }
+]

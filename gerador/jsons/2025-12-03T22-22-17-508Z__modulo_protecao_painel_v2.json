@@ -1,0 +1,17 @@
+[
+  {
+    "caminho": "../backend/middlewares",
+    "arquivo": "authPainel.js",
+    "conteudo": "// middleware/authPainel.js\nmodule.exports = (req, res, next) => {\n  try {\n    const logged = req.session && req.session.usuarioAtual;\n    if (!logged) {\n      return res.redirect('/modules/usuarios/login.html');\n    }\n    next();\n  } catch (err) {\n    console.error('Erro no middleware authPainel:', err);\n    return res.redirect('/modules/usuarios/login.html');\n  }\n};\n"
+  },
+  {
+    "caminho": "../backend/public/painel",
+    "arquivo": "painel.js",
+    "conteudo": "// painel.js atualizado com proteção client-side\ndocument.addEventListener('DOMContentLoaded', () => {\n  const storedUser = sessionStorage.getItem('usuarioAtual') || localStorage.getItem('usuarioAtual');\n  if (!storedUser) {\n    return window.location.href = '/modules/usuarios/login.html';\n  }\n\n  const userEl = document.getElementById('dashboardUser');\n  if (userEl) userEl.textContent = storedUser;\n\n  const statusEl = document.getElementById('dashboardStatus');\n  if (statusEl) statusEl.textContent = 'Painel carregado com sucesso. Segurança PBQE-C ativa.';\n\n  document.querySelectorAll('[data-href]').forEach(btn => {\n    btn.addEventListener('click', () => {\n      window.location.href = btn.getAttribute('data-href');\n    });\n  });\n\n  document.getElementById('btnLogout')?.addEventListener('click', () => {\n    sessionStorage.removeItem('usuarioAtual');\n    localStorage.removeItem('usuarioAtual');\n    window.location.href = '/modules/usuarios/login.html';\n  });\n});\n"
+  },
+  {
+    "caminho": "../backend/public/modules/usuarios",
+    "arquivo": "usuarios.js",
+    "conteudo": "// Trecho para inserir no final do login (usuarios.js)\nif (resultado.sucesso) {\n  sessionStorage.setItem('usuarioAtual', email);\n  window.location.href = '/painel';\n}\n"
+  }
+]

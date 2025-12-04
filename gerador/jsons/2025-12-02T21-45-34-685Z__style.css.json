@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend/public/modules/usuarios",
+    "arquivo": "style.css",
+    "conteudo": "body {\\n  background: #2b1d0f;\\n  color: #f8d9a0;\\n  font-family: Arial, sans-serif;\\n  text-align: center;\\n  padding-top: 50px;\\n}\\n\\n.container {\\n  background: #3a2714;\\n  padding: 20px;\\n  border-radius: 10px;\\n  width: 350px;\\n  margin: 0 auto;\\n  box-shadow: 0 0 15px #000;\\n}\\n\\ninput {\\n  width: 90%;\\n  padding: 10px;\\n  border-radius: 5px;\\n  border: none;\\n  margin-bottom: 10px;\\n}\\n\\nbutton {\\n  background: #b5651d;\\n  color: white;\\n  border: none;\\n  padding: 10px 20px;\\n  cursor: pointer;\\n  border-radius: 5px;\\n  font-weight: bold;\\n}\\n\\nbutton:hover {\\n  background: #c27a34;\\n}\\n\\n.fire {\\n  font-size: 60px;\\n  animation: flicker 0.3s infinite alternate;\\n}\\n\\n@keyframes flicker {\\n  from { text-shadow: 0 0 10px #ff4500; }\\n  to { text-shadow: 0 0 20px #ffae42; }\\n}"
+  }
+]

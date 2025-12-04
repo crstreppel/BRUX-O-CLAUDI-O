@@ -1,0 +1,17 @@
+[
+  {
+    "caminho": "../backend/migrations_arquivadas/usuarios_v1",
+    "arquivo": "README_historico.txt",
+    "conteudo": "MÓDULO: Usuarios V1\nDATA DO ARQUIVAMENTO: 2025-12-03\nMOTIVO: A V1 não usou migrations reais; estrutura criada via Sequelize Sync. Arquivamento lógico.\nTABELA ORIGINAL: public.usuarios (agora historico.usuarios_v1)\nMIGRATIONS ARQUIVADAS:\n- 20251130203458-create-usuarios.js\n- 20251201120000-add-email-to-usuarios.js\nLOCALIZAÇÃO FINAL DA TABELA HISTÓRICA: historico.usuarios_v1\n"
+  },
+  {
+    "caminho": "../backend/migrations_arquivadas/usuarios_v1",
+    "arquivo": "20251130203458-create-usuarios.js",
+    "conteudo": "'use strict';\n\n/** @type {import('sequelize-cli').Migration} */\nmodule.exports = {\n  async up (queryInterface, Sequelize) {\n    /**\n     * Add altering commands here.\n     *\n     * Example:\n     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });\n     */\n  },\n\n  async down (queryInterface, Sequelize) {\n    /**\n     * Add reverting commands here.\n     *\n     * Example:\n     * await queryInterface.dropTable('users');\n     */\n  }\n};\n"
+  },
+  {
+    "caminho": "../backend/migrations_arquivadas/usuarios_v1",
+    "arquivo": "20251201120000-add-email-to-usuarios.js",
+    "conteudo": "'use strict';\n\nmodule.exports = {\n  async up(queryInterface, Sequelize) {\n    await queryInterface.addColumn('usuarios', 'email', {\n      type: Sequelize.STRING(255),\n      allowNull: false,\n      unique: true\n    });\n  },\n\n  async down(queryInterface, Sequelize) {\n    await queryInterface.removeColumn('usuarios', 'email');\n  }\n};\n"
+  }
+]

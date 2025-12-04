@@ -1,68 +1,72 @@
+<!-- PBQE-C update 2025-12-04 -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Módulo Usuários • PBQE-C Lab</title>
+  <title>Central de Usuários • PBQE-C V2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="usuarios.css" />
 </head>
-<body>
-  <div class="page">
-    <header class="header">
-      <h1>Módulo de Usuários</h1>
-      <p class="subtitle">Cadastro e login com email validado • PBQE-C Clean Light</p>
-    </header>
+<body class="page page-dashboard">
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-logo">PBQE-C V2</span>
+      <span class="topbar-module">Módulo Usuários</span>
+    </div>
+    <div class="topbar-right">
+      <a href="login.html" class="btn btn-ghost">Sair</a>
+    </div>
+  </header>
 
-    <main class="grid">
-      <!-- Card de Cadastro -->
-      <section class="card">
-        <h2>Cadastro</h2>
-        <p class="card-desc">Crie um usuário com email e senha para acessar o sistema.</p>
+  <main class="dashboard-main">
+    <section class="panel-grid">
+      <article class="panel-card">
+        <h2>Cadastro de usuário</h2>
+        <p>Crie um novo usuário com e-mail e senha protegidos com Argon2.</p>
+        <a href="cadastro.html" class="btn btn-primary">Ir para cadastro</a>
+      </article>
 
-        <div class="field">
-          <label for="cad-usuario">Usuário</label>
-          <input id="cad-usuario" type="text" placeholder="Seu usuário" />
-        </div>
-
-        <div class="field">
-          <label for="cad-email">Email</label>
-          <input id="cad-email" type="email" placeholder="voce@exemplo.com" />
-        </div>
-
-        <div class="field">
-          <label for="cad-senha">Senha</label>
-          <input id="cad-senha" type="password" placeholder="Sua senha" />
-        </div>
-
-        <button type="button" class="btn primary" onclick="cadastrarUsuario()">
-          Cadastrar Usuário
-        </button>
-
-        <div id="cad-msg" class="msg"></div>
-      </section>
-
-      <!-- Card de Login -->
-      <section class="card">
+      <article class="panel-card">
         <h2>Login</h2>
-        <p class="card-desc">Acesse usando o usuário e a senha cadastrados.</p>
+        <p>Acesse o sistema usando suas credenciais já cadastradas.</p>
+        <a href="login.html" class="btn btn-primary">Ir para login</a>
+      </article>
 
-        <div class="field">
-          <label for="login-usuario">Usuário</label>
-          <input id="login-usuario" type="text" placeholder="Seu usuário" />
-        </div>
+      <article class="panel-card">
+        <h2>Confirmação de e-mail</h2>
+        <p>Reenviar o código ou confirmar um e-mail pendente.</p>
+        <button id="btnAbrirConfirmacao" class="btn btn-outline">Confirmar e-mail</button>
+      </article>
+    </section>
 
-        <div class="field">
-          <label for="login-senha">Senha</label>
-          <input id="login-senha" type="password" placeholder="Sua senha" />
-        </div>
+    <section id="secConfirmacao" class="panel-confirm" hidden>
+      <div class="panel-card panel-wide">
+        <h2>Confirmar e-mail</h2>
+        <p class="panel-text">
+          Digite o e-mail utilizado no cadastro e o código recebido. Se precisar, peça o reenvio.
+        </p>
 
-        <button type="button" class="btn secondary" onclick="loginUsuario()">
-          Entrar
-        </button>
+        <form id="formConfirmarCodigo" class="auth-form inline-grid">
+          <div class="form-group">
+            <label for="confEmail">E-mail</label>
+            <input id="confEmail" name="email" type="email" required />
+          </div>
 
-        <div id="login-msg" class="msg"></div>
-      </section>
-    </main>
-  </div>
+          <div class="form-group">
+            <label for="confCodigo">Código</label>
+            <input id="confCodigo" name="codigo" type="text" maxlength="6" required />
+          </div>
+
+          <button type="submit" class="btn btn-primary">Confirmar código</button>
+        </form>
+
+        <button id="btnReenviar" class="btn btn-text">Reenviar código para este e-mail</button>
+
+        <div id="msgConfirmacao" class="auth-message" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
 
   <script src="usuarios.js"></script>
 </body>

@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend/public/modules/usuarios",
+    "arquivo": "cadastro.html",
+    "conteudo": "<!DOCTYPE html>\\n<html>\\n<head>\\n  <meta charset='UTF-8'>\\n  <link rel='stylesheet' href='style.css'>\\n  <title>Cadastro - Tribo do Fogo</title>\\n</head>\\n<body>\\n  <div class='container'>\\n    <h1>🔥 Cadastro da Tribo 🔥</h1>\\n    <input id='usuario' type='text' placeholder='Nome do guerreiro'>\\n    <input id='senha' type='password' placeholder='Senha secreta'>\\n    <button onclick='cadastrarUsuario()'>Cadastrar</button>\\n    <br><br>\\n    <a href='login.html'>Já é da tribo? Entrar</a>\\n  </div>\\n  <script src='usuarios.js'></script>\\n</body>\\n</html>"
+  }
+]

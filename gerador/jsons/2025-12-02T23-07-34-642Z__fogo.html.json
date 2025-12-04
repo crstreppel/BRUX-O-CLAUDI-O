@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend/public/modules/usuarios",
+    "arquivo": "fogo.html",
+    "conteudo": "<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>Bem-vindo • Sistema Central</title>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n  <link rel=\"stylesheet\" href=\"style.css\" />\n  <link rel=\"stylesheet\" href=\"usuarios.css\" />\n</head>\n<body class=\"page page-welcome\">\n  <div class=\"welcome-wrapper\">\n    <div class=\"welcome-card\">\n      <h1>Login autorizado ✅</h1>\n      <p>Bem-vindo ao Sistema Central Petropolitan – PBQE-C V2.</p>\n      <a href=\"usuarios.html\" class=\"btn btn-primary\">Ir para central de usuários</a>\n    </div>\n  </div>\n</body>\n</html>\n"
+  }
+]

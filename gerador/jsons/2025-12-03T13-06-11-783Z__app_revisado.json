@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "./app.js",
+    "arquivo": "app.js",
+    "conteudo": "const express = require('express');\nconst path = require('path');\nconst sequelize = require('./config/connection');\n\nconst app = express();\n\n// Middlewares\napp.use(express.json());\napp.use(express.urlencoded({ extended: true }));\n\n// Arquivos estáticos\napp.use(express.static(path.join(__dirname, 'public')));\n\n// Rotas de API (PBQE-C)\nconst usuariosRoutes = require('./modules/usuarios/usuariosRoutes');\napp.use('/api/usuarios', usuariosRoutes);\n\n// Rota inicial\napp.get('/', (req, res) => {\n  res.send('<h1>🔥 Servidor PBQE-C rodando!</h1>');\n});\n\n// Inicialização com sync do banco\nconst PORT = 3000;\n\nsequelize.sync()\n  .then(() => {\n    console.log('🗂️  Banco sincronizado com Sequelize.');\n    app.listen(PORT, () => console.log(`🔥 Servidor rodando na porta ${PORT}`));\n  })\n  .catch(err => {\n    console.error('❌ Erro ao sincronizar banco:', err);\n  });\n\nmodule.exports = app;\n"
+  }
+]
