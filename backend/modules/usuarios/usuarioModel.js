@@ -1,8 +1,9 @@
 // ======================================================================
-// 🧙‍♂️ usuarioModel.js • PBQE-C V2 – Módulo Usuários
+// 🧙‍♂️ usuarioModel.js • PBQE-C V2 – Módulo Usuários (ARGON2id)
 // ----------------------------------------------------------------------
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../config/connection');
+const argon2 = require('argon2');
 
 const Usuario = sequelize.define(
   'Usuario',
@@ -88,5 +89,31 @@ const Usuario = sequelize.define(
     underscored: true,
   }
 );
+
+// ======================================================================
+// 🔐 Hooks PBQE-C – Hash automático da senha (Argon2id)
+// ----------------------------------------------------------------------
+Usuario.beforeCreate(async (usuario) => {
+  if (usuario.senhaHash) {
+    usuario.senhaHash = await argon2.hash(usuario.senhaHash, {
+      type: argon2.argon2id,
+    });
+  }
+});
+
+Usuario.beforeUpdate(async (usuario) => {
+  if (usuario.changed('senhaHash')) {
+    usuario.senhaHash = await argon2.hash(usuario.senhaHash, {
+      type: argon2.argon2id,
+    });
+  }
+});
+
+// ======================================================================
+// 🔎 Método de instância – Validação de senha
+// ----------------------------------------------------------------------
+Usuario.prototype.validarSenha = async function (senhaPlain) {
+  return argon2.verify(this.senhaHash, senhaPlain);
+};
 
 module.exports = Usuario;

@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/modules/guard/authMiddleware.js",
+  "arquivo": "authMiddleware.js",
+  "conteudo": "module.exports = function (req, res, next) {\n  const usuario = req.usuario;\n  if (!usuario) {\n    return res.status(401).json({ erro: 'Usuário não autenticado.' });\n  }\n  next();\n};"
+}

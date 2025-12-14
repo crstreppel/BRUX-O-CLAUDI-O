@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend/config",
+    "arquivo": "auth.js",
+    "conteudo": "// PBQE-C • Auth config central\n// Responsável por JWT (segredo e expiração)\n// Padrão V1: require explícito, sem dotenv\n\nmodule.exports = {\n  jwtSecret: 'PBQE_SUPER_SECRET_CHANGEME',\n  jwtExpiresIn: '1h'\n};\n"
+  }
+]

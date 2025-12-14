@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/modules/roles",
+  "arquivo": "roleModel.js",
+  "conteudo": "const { DataTypes } = require('sequelize');\nconst sequelize = require('../../config/connection');\n\nconst Role = sequelize.define('Role', {\n  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },\n  nome: { type: DataTypes.STRING, allowNull: false, unique: true },\n  descricao: { type: DataTypes.STRING, allowNull: false },\n  statusId: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },\n  ativo: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },\n  deletedAt: { type: DataTypes.DATE },\n  createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },\n  updatedAt: { type: DataTypes.DATE, allowNull: false }\n}, {\n  tableName: 'roles',\n  paranoid: true\n});\n\nmodule.exports = Role;\n"
+}

@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend/modules/roles",
+    "arquivo": "roleRoutes.js",
+    "conteudo": "const express = require('express');\nconst router = express.Router();\nconst controller = require('./roleController.js');\n\nrouter.post('/criar', controller.criar);\nrouter.get('/listar', controller.listar);\nrouter.put('/atualizar/:id', controller.atualizar);\nrouter.delete('/excluir/:id', controller.excluir);\n\nmodule.exports = router;\n"
+  }
+]

@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/public/modules/roles",
+  "arquivo": "roles.html",
+  "conteudo": "<section class='modulo'><header><h1>Gerenciar Perfis (Roles)</h1></header><div class='conteudo'><table class='tabela'><thead><tr><th>ID</th><th>Nome</th><th>Descrição</th></tr></thead><tbody id='lista-roles'></tbody></table></div></section>"
+}

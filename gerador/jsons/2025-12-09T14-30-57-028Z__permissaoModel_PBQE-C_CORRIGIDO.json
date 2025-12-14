@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend/modules/permissoes",
+    "arquivo": "permissaoModel.js",
+    "conteudo": "module.exports = (sequelize, DataTypes) => {\n  const Permissao = sequelize.define('Permissao', {\n    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },\n    descricao: { type: DataTypes.STRING, allowNull: false },\n    modulo: { type: DataTypes.STRING, allowNull: false },\n    acao: { type: DataTypes.STRING, allowNull: false },\n    chave: { type: DataTypes.STRING, allowNull: false, unique: true },\n\n    statusId: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },\n    ativo: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },\n\n    createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },\n    updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW }\n  }, {\n    tableName: 'permissoes',\n    paranoid: true\n  });\n\n  Permissao.associate = (models) => {\n    Permissao.belongsTo(models.Status, {\n      foreignKey: 'statusId',\n      as: 'status'\n    });\n  };\n\n  return Permissao;\n};"
+  }
+]

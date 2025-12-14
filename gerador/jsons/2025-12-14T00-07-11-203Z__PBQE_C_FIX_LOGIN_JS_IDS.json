@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend/public/modules/login",
+    "arquivo": "login.js",
+    "conteudo": "// PBQE-C • Login usando sessionStorage (padrão oficial)\ndocument.addEventListener('DOMContentLoaded', () => {\n  const form = document.querySelector('form');\n\n  form.addEventListener('submit', async (e) => {\n    e.preventDefault();\n\n    const emailInput = document.querySelector('#loginEmail');\n    const senhaInput = document.querySelector('#loginSenha');\n\n    if (!emailInput || !senhaInput) {\n      alert('Campos de login não encontrados no HTML.');\n      return;\n    }\n\n    const email = emailInput.value;\n    const senha = senhaInput.value;\n\n    try {\n      const res = await fetch('/api/usuarios/login', {\n        method: 'POST',\n        headers: { 'Content-Type': 'application/json' },\n        body: JSON.stringify({ email, senha })\n      });\n\n      const data = await res.json();\n\n      if (!res.ok || !data.token) {\n        alert(data.erro || 'Erro no login');\n        return;\n      }\n\n      // 🔐 PADRÃO PBQE-C — sessionStorage\n      sessionStorage.setItem('tokenPetropolitan', data.token);\n      sessionStorage.setItem('usuarioPetropolitan', JSON.stringify(data.usuario));\n\n      window.location.href = '/painel/index.html';\n\n    } catch (err) {\n      alert('Erro de conexão com o servidor');\n    }\n  });\n});\n"
+  }
+]

@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/public/modules/roles",
+  "arquivo": "roles.js",
+  "conteudo": "console.log('Tela de roles carregada');\ndocument.addEventListener('DOMContentLoaded',()=>{\n  const tbody=document.getElementById('lista-roles');\n  tbody.innerHTML='<tr><td>1</td><td>admin</td><td>Administrador do Sistema</td></tr>';\n});"
+}

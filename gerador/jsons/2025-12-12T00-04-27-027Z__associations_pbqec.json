@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/config",
+  "arquivo": "associations.js",
+  "conteudo": "module.exports = (sequelize, models) => {\n  const Usuario = models.Usuario;\n  const Role = models.Role;\n  const Permissao = models.Permissao;\n  const Status = models.Status;\n\n  // Usuario -> Role\n  Usuario.belongsTo(Role, {\n    foreignKey: 'roleId',\n    as: 'role'\n  });\n  Role.hasMany(Usuario, {\n    foreignKey: 'roleId',\n    as: 'usuarios'\n  });\n\n  // Role -> Status\n  Role.belongsTo(Status, {\n    foreignKey: 'statusId',\n    as: 'status'\n  });\n\n  // Permissao -> Status\n  Permissao.belongsTo(Status, {\n    foreignKey: 'statusId',\n    as: 'status'\n  });\n\n  // Role <-> Permissao (many-to-many)\n  Role.belongsToMany(Permissao, {\n    through: 'roles_permissoes',\n    as: 'permissoes',\n    foreignKey: 'roleId'\n  });\n\n  Permissao.belongsToMany(Role, {\n    through: 'roles_permissoes',\n    as: 'roles',\n    foreignKey: 'permissaoId'\n  });\n};\n"
+}

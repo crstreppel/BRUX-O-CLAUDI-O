@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/modules/permissoes",
+  "arquivo": "permissaoRoutes.js",
+  "conteudo": "const express = require('express');\nconst router = express.Router();\nconst controller = require('./permissaoController.js');\nconst { auth, permission } = require('../guard/gatekeeper.js');\n\nrouter.post('/criar', auth, permission('permissoes.criar'), controller.criar);\nrouter.get('/listar', auth, permission('permissoes.listar'), controller.listar);\nrouter.put('/atualizar/:id', auth, permission('permissoes.atualizar'), controller.atualizar);\nrouter.delete('/excluir/:id', auth, permission('permissoes.excluir'), controller.excluir);\n\nmodule.exports = router;"
+}

@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/config",
+  "arquivo": "connection.js",
+  "conteudo": "const { Sequelize } = require('sequelize');\n\n// Instância única do Sequelize (PBQE-C SINGLETON)\nconst sequelize = new Sequelize('petropolitan_lab', 'bruxao', 'bruxao123', {\n  host: 'localhost',\n  dialect: 'postgres'\n});\n\nmodule.exports = sequelize;\n"
+}

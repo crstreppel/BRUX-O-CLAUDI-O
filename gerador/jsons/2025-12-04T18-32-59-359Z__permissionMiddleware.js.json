@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/modules/guard/permissionMiddleware.js",
+  "arquivo": "permissionMiddleware.js",
+  "conteudo": "module.exports = function (permissaoChave) {\n  return async function (req, res, next) {\n    try {\n      const usuario = req.usuario;\n      if (!usuario) return res.status(401).json({ erro: 'Usuário não autenticado.' });\n\n      const permissoes = usuario.permissoes || [];\n      if (!permissoes.includes(permissaoChave)) {\n        return res.status(403).json({ erro: 'Acesso negado.' });\n      }\n\n      next();\n    } catch (err) {\n      return res.status(500).json({ erro: err.message });\n    }\n  };\n};"
+}

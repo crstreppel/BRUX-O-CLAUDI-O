@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/public/css/roles.css",
+  "arquivo": "roles.css",
+  "conteudo": "#roles-app{padding:20px;}"
+}

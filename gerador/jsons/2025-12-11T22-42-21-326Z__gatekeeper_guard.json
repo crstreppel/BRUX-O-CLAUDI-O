@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/modules/guard",
+  "arquivo": "gatekeeper.js",
+  "conteudo": "const auth = require('./authMiddleware');\nconst permission = require('./permissionMiddleware');\n\nmodule.exports = { auth, permission };"
+}

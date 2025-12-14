@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/public/modules/permissoes/permissoes.html",
+  "arquivo": "permissoes.html",
+  "conteudo": "<div id='permissoes-app'><h1>Permissões</h1></div>"
+}

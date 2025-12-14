@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/public/modules/shared",
+  "arquivo": "api.js",
+  "conteudo": "// PBQE-C • API Fetch Centralizado (fix logout em rota pública)\nasync function apiFetch(url, options = {}) {\n  const token = Session.getToken();\n\n  const headers = Object.assign({}, options.headers || {}, {\n    'Content-Type': 'application/json'\n  });\n\n  if (token) {\n    headers['Authorization'] = `Bearer ${token}`;\n  }\n\n  const response = await fetch(url, { ...options, headers });\n\n  // 🔐 Auto-logout SOMENTE se houver sessão ativa\n  if ((response.status === 401 || response.status === 403) && token) {\n    Session.logout();\n    return;\n  }\n\n  const data = await response.json();\n\n  if (!response.ok) {\n    throw data;\n  }\n\n  return data;\n}\n\nwindow.apiFetch = apiFetch;\n"
+}

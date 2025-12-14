@@ -1,0 +1,12 @@
+[
+  {
+    "caminho": "../backend/modules/roles",
+    "arquivo": "roleModel.js",
+    "conteudo": "// ======================================================================\n// 🧙‍♂️ roleModel.js • PBQE-C V2\n// ----------------------------------------------------------------------\nconst { DataTypes } = require('sequelize');\nconst sequelize = require('../../config/connection');\n\nconst Role = sequelize.define('Role', {\n  id: {\n    type: DataTypes.UUID,\n    defaultValue: DataTypes.UUIDV4,\n    primaryKey: true\n  },\n  nome: {\n    type: DataTypes.STRING,\n    allowNull: false\n  },\n  descricao: {\n    type: DataTypes.STRING\n  },\n  statusId: {\n    type: DataTypes.UUID,\n    allowNull: false,\n    field: 'status_id'\n  },\n  ativo: {\n    type: DataTypes.BOOLEAN,\n    defaultValue: true\n  }\n}, {\n  tableName: 'roles',\n  underscored: true,\n  paranoid: true,\n  deletedAt: 'deleted_at'\n});\n\nmodule.exports = Role;\n"
+  },
+  {
+    "caminho": "../backend/modules/permissoes",
+    "arquivo": "permissaoModel.js",
+    "conteudo": "// ======================================================================\n// 🧙‍♂️ permissaoModel.js • PBQE-C V2\n// ----------------------------------------------------------------------\nconst { DataTypes } = require('sequelize');\nconst sequelize = require('../../config/connection');\n\nconst Permissao = sequelize.define('Permissao', {\n  id: {\n    type: DataTypes.UUID,\n    defaultValue: DataTypes.UUIDV4,\n    primaryKey: true\n  },\n  descricao: {\n    type: DataTypes.STRING,\n    allowNull: false\n  },\n  modulo: {\n    type: DataTypes.STRING,\n    allowNull: false\n  },\n  acao: {\n    type: DataTypes.STRING,\n    allowNull: false\n  },\n  chave: {\n    type: DataTypes.STRING,\n    allowNull: false\n  },\n  statusId: {\n    type: DataTypes.UUID,\n    allowNull: false,\n    field: 'status_id'\n  },\n  ativo: {\n    type: DataTypes.BOOLEAN,\n    defaultValue: true\n  }\n}, {\n  tableName: 'permissoes',\n  underscored: true,\n  paranoid: true,\n  deletedAt: 'deleted_at'\n});\n\nmodule.exports = Permissao;\n"
+  }
+]

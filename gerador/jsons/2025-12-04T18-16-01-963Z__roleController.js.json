@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/modules/roles/roleController.js",
+  "arquivo": "roleController.js",
+  "conteudo": "const Role = require('./roleModel');\n\nmodule.exports = {\n  async criar(req, res) {\n    try {\n      const { nome, descricao } = req.body;\n      const novo = await Role.create({ nome, descricao });\n      return res.status(201).json(novo);\n    } catch (err) {\n      return res.status(500).json({ erro: err.message });\n    }\n  },\n\n  async listar(req, res) {\n    try {\n      const dados = await Role.findAll();\n      return res.json(dados);\n    } catch (err) {\n      return res.status(500).json({ erro: err.message });\n    }\n  }\n};"
+}

@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/public/modules/roles",
+  "arquivo": "roles.html",
+  "conteudo": "<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Gerenciar Roles</title>\n  <link rel=\"stylesheet\" href=\"roles.css\">\n</head>\n<body>\n  <h1>Gerenciar Roles</h1>\n  <div id=\"roles-list\"></div>\n\n  <div id=\"perms-section\" style=\"display:none;\">\n    <h2>Permissões da Role</h2>\n    <div id=\"role-perms\"></div>\n    <h3>Adicionar Permissão</h3>\n    <div id=\"all-perms\"></div>\n  </div>\n\n  <script src=\"roles.js\"></script>\n</body>\n</html>\n"
+}

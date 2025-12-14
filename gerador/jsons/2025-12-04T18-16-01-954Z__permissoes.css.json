@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/public/css/permissoes.css",
+  "arquivo": "permissoes.css",
+  "conteudo": "#permissoes-app{padding:20px;}"
+}

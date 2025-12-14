@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/public/modules/roles/roles.html",
+  "arquivo": "roles.html",
+  "conteudo": "<div id='roles-app'><h1>Perfis</h1></div>"
+}

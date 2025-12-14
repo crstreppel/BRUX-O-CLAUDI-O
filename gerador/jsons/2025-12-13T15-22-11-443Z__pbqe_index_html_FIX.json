@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/public",
+  "arquivo": "index.html",
+  "conteudo": "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charset=\"UTF-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/><title>Painel Central</title><link rel=\"stylesheet\" href=\"styles.css\"/></head><body><div class=\"top-bar\"><div class=\"user-info\"><span>claudio@petropolitan.pet</span><a href=\"login.html\" class=\"btn btn-secondary\">Sair</a></div></div><main class=\"container\"><section class=\"card\"><h2>Roles & Perfis de Acesso</h2><p>Gerenciar grupos de acesso e permissões vinculadas.</p><a href=\"modules/roles/roles.html\" class=\"btn btn-primary btn-full\">Ir para Roles</a></section></main></body></html>"
+}

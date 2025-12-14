@@ -1,21 +1,9 @@
 const { Sequelize } = require('sequelize');
 
+// Instância única do Sequelize (PBQE-C SINGLETON)
 const sequelize = new Sequelize('petropolitan_lab', 'bruxao', 'bruxao123', {
   host: 'localhost',
   dialect: 'postgres'
 });
-
-(async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('🔥 Banco de dados conectado com sucesso!');
-
-    // PBQE-C MODE: sem alter, sem force. Quem manda é a migration.
-    await sequelize.sync();
-    console.log('🔥 Tabelas sincronizadas (migration mode).');
-  } catch (error) {
-    console.error('❌ Erro ao conectar no banco:', error);
-  }
-})();
 
 module.exports = sequelize;

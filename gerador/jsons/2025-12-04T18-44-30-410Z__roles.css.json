@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/public/modules/roles",
+  "arquivo": "roles.css",
+  "conteudo": ".modulo{padding:20px;font-family:Arial;} header h1{margin-bottom:15px;} .tabela{width:100%;border-collapse:collapse;} .tabela th,.tabela td{border:1px solid #ccc;padding:8px;text-align:left;} "
+}

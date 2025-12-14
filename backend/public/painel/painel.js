@@ -1,25 +1,16 @@
-// painel.js atualizado com proteção client-side
+// PBQE-C • Painel protegido com Session Manager
 document.addEventListener('DOMContentLoaded', () => {
-  const storedUser = sessionStorage.getItem('usuarioAtual') || localStorage.getItem('usuarioAtual');
-  if (!storedUser) {
-    return window.location.href = '/modules/usuarios/login.html';
+  Session.requireAuth();
+
+  const usuario = Session.getUsuario();
+  const elNome = document.querySelector('#usuario-nome');
+
+  if (elNome && usuario) {
+    elNome.textContent = usuario.nome || usuario.email;
   }
 
-  const userEl = document.getElementById('dashboardUser');
-  if (userEl) userEl.textContent = storedUser;
-
-  const statusEl = document.getElementById('dashboardStatus');
-  if (statusEl) statusEl.textContent = 'Painel carregado com sucesso. Segurança PBQE-C ativa.';
-
-  document.querySelectorAll('[data-href]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      window.location.href = btn.getAttribute('data-href');
-    });
-  });
-
-  document.getElementById('btnLogout')?.addEventListener('click', () => {
-    sessionStorage.removeItem('usuarioAtual');
-    localStorage.removeItem('usuarioAtual');
-    window.location.href = '/modules/usuarios/login.html';
-  });
+  const btnSair = document.querySelector('#btn-sair');
+  if (btnSair) {
+    btnSair.addEventListener('click', () => Session.logout());
+  }
 });

@@ -1,0 +1,27 @@
+{
+  "tipo": "css-update",
+  "descricao": "Ajustes visuais finos no painel (hierarquia, espa\u00e7amento e conforto visual)",
+  "arquivos": [
+    {
+      "arquivo": "backend/public/style.css",
+      "acoes": [
+        "Ajuste de background geral para reduzir ru\u00eddo visual",
+        "Padroniza\u00e7\u00e3o leve de espa\u00e7amentos globais"
+      ]
+    },
+    {
+      "arquivo": "backend/public/painel/painel.css",
+      "acoes": [
+        "Redu\u00e7\u00e3o de altura do header",
+        "Compacta\u00e7\u00e3o de cards",
+        "Ajuste de bot\u00f5es (CTA principal vs secund\u00e1rio)",
+        "Melhoria visual de badges e status"
+      ]
+    }
+  ],
+  "observacoes": [
+    "Nenhuma altera\u00e7\u00e3o estrutural",
+    "Nenhuma mudan\u00e7a de HTML",
+    "Apenas polimento visual seguindo PBQE-C"
+  ]
+}

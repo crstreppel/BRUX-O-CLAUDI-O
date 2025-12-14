@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/config",
+  "arquivo": "connection.js",
+  "conteudo": "const { Sequelize } = require('sequelize');\n\n// Instância única do Sequelize (Padrão SINGLETON PBQE-C)\nconst sequelize = new Sequelize('petropolitan_lab', 'bruxao', 'bruxao123', {\n  host: 'localhost',\n  dialect: 'postgres'\n});\n\n// Carrega associações após os models (models importam esta conexão)\nconst initAssociations = require('./associations');\ninitAssociations();\n\nmodule.exports = sequelize;\n"
+}

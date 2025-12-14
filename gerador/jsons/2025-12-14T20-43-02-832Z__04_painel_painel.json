@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/public/painel",
+  "arquivo": "painel.js",
+  "conteudo": "// PBQE-C • Painel protegido com Session Manager\ndocument.addEventListener('DOMContentLoaded', () => {\n  Session.requireAuth();\n\n  const usuario = Session.getUsuario();\n  const elNome = document.querySelector('#usuario-nome');\n\n  if (elNome && usuario) {\n    elNome.textContent = usuario.nome || usuario.email;\n  }\n\n  const btnSair = document.querySelector('#btn-sair');\n  if (btnSair) {\n    btnSair.addEventListener('click', () => Session.logout());\n  }\n});\n"
+}

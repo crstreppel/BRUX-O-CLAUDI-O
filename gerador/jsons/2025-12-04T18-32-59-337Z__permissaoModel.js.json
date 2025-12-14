@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/modules/permissoes/permissaoModel.js",
+  "arquivo": "permissaoModel.js",
+  "conteudo": "const { DataTypes } = require('sequelize');\nconst sequelize = require('../../config/sequelize');\n\nconst Permissao = sequelize.define('Permissao', {\n  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },\n  descricao: { type: DataTypes.STRING, allowNull: false },\n  modulo: { type: DataTypes.STRING, allowNull: false },\n  acao: { type: DataTypes.STRING, allowNull: false },\n  chave: { type: DataTypes.STRING, allowNull: false, unique: true },\n  statusId: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },\n  ativo: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },\n  deletedAt: { type: DataTypes.DATE, allowNull: true },\n  createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },\n  updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW }\n}, {\n  tableName: 'permissoes',\n  paranoid: true\n});\n\nmodule.exports = Permissao;"
+}

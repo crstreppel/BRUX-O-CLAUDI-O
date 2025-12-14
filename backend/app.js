@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const sequelize = require('./config/connection');
+const initAssociations = require('./config/associations');
 
 const app = express();
 
@@ -19,6 +20,9 @@ app.use('/api/usuarios', usuariosRoutes);
 app.get('/', (req, res) => {
   res.send('<h1>🔥 Servidor PBQE-C rodando!</h1>');
 });
+
+// Inicialização das associações (APÓS models carregados)
+initAssociations();
 
 // Inicialização com sync do banco
 const PORT = 3000;

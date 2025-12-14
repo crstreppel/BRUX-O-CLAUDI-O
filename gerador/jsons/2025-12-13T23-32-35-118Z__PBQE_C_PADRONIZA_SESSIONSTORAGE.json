@@ -1,0 +1,12 @@
+[
+  {
+    "caminho": "../backend/public/modules/login",
+    "arquivo": "login.js",
+    "conteudo": "// PBQE-C • Login usando sessionStorage (padrão oficial)\ndocument.addEventListener('DOMContentLoaded', () => {\n  const form = document.querySelector('form');\n\n  form.addEventListener('submit', async (e) => {\n    e.preventDefault();\n\n    const email = document.querySelector('#email').value;\n    const senha = document.querySelector('#senha').value;\n\n    try {\n      const res = await fetch('/api/usuarios/login', {\n        method: 'POST',\n        headers: { 'Content-Type': 'application/json' },\n        body: JSON.stringify({ email, senha })\n      });\n\n      const data = await res.json();\n\n      if (!res.ok || !data.token) {\n        alert(data.erro || 'Erro no login');\n        return;\n      }\n\n      // 🔐 PADRÃO PBQE-C\n      sessionStorage.setItem('tokenPetropolitan', data.token);\n      sessionStorage.setItem('usuarioPetropolitan', JSON.stringify(data.usuario));\n\n      window.location.href = '/painel/index.html';\n\n    } catch (err) {\n      alert('Erro de conexão');\n    }\n  });\n});\n"
+  },
+  {
+    "caminho": "../backend/public/painel",
+    "arquivo": "painel.js",
+    "conteudo": "// PBQE-C • Guard + Logout usando sessionStorage\ndocument.addEventListener('DOMContentLoaded', () => {\n  const token = sessionStorage.getItem('tokenPetropolitan');\n\n  if (!token) {\n    window.location.href = '/modules/login/login.html';\n    return;\n  }\n\n  const btnSair = document.querySelector('#btn-sair');\n  if (btnSair) {\n    btnSair.addEventListener('click', () => {\n      sessionStorage.clear();\n      window.location.href = '/modules/login/login.html';\n    });\n  }\n});\n"
+  }
+]

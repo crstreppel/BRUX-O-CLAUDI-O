@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/public/modules/permissoes",
+  "arquivo": "permissoes.js",
+  "conteudo": "console.log('Tela de permissões carregada');\ndocument.addEventListener('DOMContentLoaded',()=>{\n  const tbody=document.getElementById('lista-permissoes');\n  tbody.innerHTML='<tr><td>1</td><td>Listar Usuários</td><td>usuarios</td><td>listar</td></tr>';\n});"
+}

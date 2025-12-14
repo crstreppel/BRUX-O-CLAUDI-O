@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/public/modules/login",
+  "arquivo": "login.js",
+  "conteudo": "// PBQE-C • Login integrado ao Session Manager\ndocument.addEventListener('DOMContentLoaded', () => {\n  const form = document.querySelector('form');\n\n  form.addEventListener('submit', async (e) => {\n    e.preventDefault();\n\n    const email = document.querySelector('#loginEmail')?.value;\n    const senha = document.querySelector('#loginSenha')?.value;\n\n    if (!email || !senha) {\n      alert('Email e senha obrigatórios');\n      return;\n    }\n\n    try {\n      const data = await apiFetch('/api/usuarios/login', {\n        method: 'POST',\n        body: JSON.stringify({ email, senha })\n      });\n\n      if (!data?.token || !data?.usuario) {\n        alert('Login inválido');\n        return;\n      }\n\n      Session.setSession({ token: data.token, usuario: data.usuario });\n      window.location.href = '/painel/index.html';\n\n    } catch (err) {\n      alert(err?.erro || 'Erro no login');\n    }\n  });\n});\n"
+}

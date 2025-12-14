@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/public/js/roles.js",
+  "arquivo": "roles.js",
+  "conteudo": "console.log('Roles carregado');"
+}

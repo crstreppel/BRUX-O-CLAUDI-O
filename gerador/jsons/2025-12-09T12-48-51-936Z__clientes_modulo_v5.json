@@ -1,0 +1,66 @@
+{
+    "tipo": "gerador",
+    "modulo": "clientes",
+    "versao": "v5",
+    "frontend": {
+        "telas": [
+            "cad_clientes.html",
+            "cad_clientes.css",
+            "cad_clientes.js"
+        ]
+    },
+    "model": {
+        "nome": "Cliente",
+        "tabela": "clientes",
+        "campos": [
+            {
+                "nome": "nome",
+                "tipo": "string",
+                "required": true
+            },
+            {
+                "nome": "telefone",
+                "tipo": "string",
+                "required": false
+            },
+            {
+                "nome": "email",
+                "tipo": "string",
+                "required": false
+            },
+            {
+                "nome": "cpf",
+                "tipo": "string",
+                "criptografado": true,
+                "validarCPF": true
+            },
+            {
+                "nome": "nascimento",
+                "tipo": "date",
+                "required": false
+            },
+            {
+                "nome": "observacoes",
+                "tipo": "text",
+                "required": false
+            },
+            {
+                "nome": "statusId",
+                "tipo": "integer",
+                "required": true
+            }
+        ]
+    },
+    "controller": {
+        "validacoes": [
+            "cpfValido",
+            "cpfCriptografado"
+        ],
+        "operacoes": [
+            "criar",
+            "listar",
+            "atualizar",
+            "excluir"
+        ]
+    }
+}

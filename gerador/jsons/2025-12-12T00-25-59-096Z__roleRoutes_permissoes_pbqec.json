@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/modules/roles",
+  "arquivo": "roleRoutes.js",
+  "conteudo": "const express = require('express');\nconst router = express.Router();\nconst controller = require('./roleController.js');\nconst rolePermissaoController = require('./rolePermissaoController.js');\nconst { auth, permission } = require('../guard/gatekeeper.js');\n\nrouter.post('/criar', auth, permission('roles.criar'), controller.criar);\nrouter.get('/listar', auth, permission('roles.listar'), controller.listar);\nrouter.put('/atualizar/:id', auth, permission('roles.atualizar'), controller.atualizar);\nrouter.delete('/excluir/:id', auth, permission('roles.excluir'), controller.excluir);\n\n// Permissões vinculadas à Role\nrouter.post('/:id/permissoes/adicionar', auth, permission('roles.permissoes.atribuir'), rolePermissaoController.atribuirPermissao);\nrouter.delete('/:id/permissoes/remover', auth, permission('roles.permissoes.remover'), rolePermissaoController.removerPermissao);\nrouter.get('/:id/permissoes', auth, permission('roles.permissoes.listar'), rolePermissaoController.listarPermissoes);\n\nmodule.exports = router;\n"
+}

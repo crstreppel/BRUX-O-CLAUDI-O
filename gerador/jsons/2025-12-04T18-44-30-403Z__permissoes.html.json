@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/public/modules/permissoes",
+  "arquivo": "permissoes.html",
+  "conteudo": "<section class='modulo'><header><h1>Gerenciar Permissões</h1></header><div class='conteudo'><table class='tabela'><thead><tr><th>ID</th><th>Descrição</th><th>Módulo</th><th>Ação</th></tr></thead><tbody id='lista-permissoes'></tbody></table></div></section>"
+}

@@ -1,0 +1,5 @@
+{
+  "caminho": "../backend/public/modules/permissoes/permissoes.js",
+  "arquivo": "permissoes.js",
+  "conteudo": "console.log('Permissões carregado');"
+}

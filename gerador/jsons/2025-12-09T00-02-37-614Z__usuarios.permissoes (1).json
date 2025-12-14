@@ -1,0 +1,55 @@
+{
+  "tabela": "usuarios.permissoes",
+  "banco": "petropolitan_lab",
+  "schema": "usuarios",
+  "usuario": "bruxao",
+  "senha": "bruxao123",
+  "campos": [
+    {
+      "nome": "id",
+      "tipo": "INTEGER",
+      "primaryKey": true,
+      "autoIncrement": true
+    },
+    {
+      "nome": "nome",
+      "tipo": "STRING(100)",
+      "allowNull": false
+    },
+    {
+      "nome": "descricao",
+      "tipo": "STRING(255)",
+      "allowNull": true
+    },
+    {
+      "nome": "statusId",
+      "tipo": "INTEGER",
+      "allowNull": false
+    },
+    {
+      "nome": "ativo",
+      "tipo": "BOOLEAN",
+      "defaultValue": true
+    },
+    {
+      "nome": "createdAt",
+      "tipo": "DATE"
+    },
+    {
+      "nome": "updatedAt",
+      "tipo": "DATE"
+    },
+    {
+      "nome": "deletedAt",
+      "tipo": "DATE",
+      "paranoid": true
+    }
+  ],
+  "relacionamentos": [
+    {
+      "tipo": "belongsTo",
+      "referencia": "geral.status",
+      "chaveEstrangeira": "statusId"
+    }
+  ]
+}

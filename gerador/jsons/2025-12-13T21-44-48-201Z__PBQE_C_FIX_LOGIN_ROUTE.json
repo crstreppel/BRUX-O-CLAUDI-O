@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend/modules/usuarios",
+    "arquivo": "usuariosRoutes.js",
+    "conteudo": "const express = require('express');\nconst router = express.Router();\n\nconst usuarioController = require('./usuarioController');\nconst loginController = require('./loginController');\n\nrouter.post('/cadastrar', usuarioController.cadastrarUsuario);\n\n// LOGIN JWT OFICIAL (PBQE-C)\nrouter.post('/login', loginController.login);\n\nrouter.get('/confirmar-email', usuarioController.confirmarEmailPorToken);\nrouter.post('/confirmar-codigo', usuarioController.confirmarEmailPorCodigo);\nrouter.post('/reenviar-confirmacao', usuarioController.reenviarConfirmacao);\n\nmodule.exports = router;\n"
+  }
+]
