@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend/modules/status",
+    "arquivo": "statusModel.js",
+    "conteudo": "const { DataTypes } = require('sequelize');\nconst sequelize = require('../../config/connection');\n\nconst Status = sequelize.define('Status', {\n  id: {\n    type: DataTypes.UUID,\n    defaultValue: DataTypes.UUIDV4,\n    primaryKey: true\n  },\n  nome: { type: DataTypes.STRING, allowNull: false, unique: true },\n  descricao: { type: DataTypes.STRING, allowNull: true },\n  ativo: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true }\n}, {\n  tableName: 'status',\n  paranoid: true,\n  underscored: true\n});\n\nmodule.exports = Status;\n"
+  }
+]

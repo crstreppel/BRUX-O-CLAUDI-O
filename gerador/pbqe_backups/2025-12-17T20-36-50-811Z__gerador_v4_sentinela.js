@@ -1,10 +1,7 @@
-// PBQE-C Gerador V4 – Modo Sentinela Supremo™ (PATCH: suporte a 'origem')
-// -----------------------------------------------------------------------------
-// Novo comportamento:
-// - Se o item possuir a chave 'origem', o Gerador copia o arquivo de origem
-//   para o destino final (caminho + arquivo), em vez de usar 'conteudo'.
-// - Mantém compatibilidade total com JSONs antigos.
-// -----------------------------------------------------------------------------
+
+// PBQE-C Gerador V4 – Modo Sentinela Supremo™
+// Monitora a pasta Downloads, processa JSONs automaticamente e registra logs.
+// Compatível com JSONs no formato: [ { "caminho": "...", "arquivo": "...", "conteudo": "..." }, ... ]
 
 const fs = require("fs");
 const path = require("path");
@@ -80,19 +77,20 @@ function processarJson(nomeArquivo) {
   } catch (err) {
     console.log(`❌ JSON inválido (${nomeArquivo}). Confere o arquivo.`);
     log(`ERRO parse JSON ${nomeArquivo}: ${err.message}`);
+    // move para histórico com prefixo erro_
     const erroDestino = path.join(JSONS_HISTORY_DIR, `erro_${nomeArquivo}`);
     fs.renameSync(fullPath, erroDestino);
     log(`JSON com erro movido para: ${erroDestino}`);
     return;
   }
 
+  // Garante que vamos trabalhar com array de itens
   const itens = Array.isArray(jsonData) ? jsonData : [jsonData];
 
   for (const item of itens) {
     const caminho = item.caminho || "";
     const arquivo = item.arquivo || "";
     const conteudo = item.conteudo ?? "";
-    const origem = item.origem || null;
 
     if (!arquivo) {
       log(`AVISO: item sem 'arquivo' no JSON ${nomeArquivo}, ignorado.`);
@@ -103,28 +101,21 @@ function processarJson(nomeArquivo) {
     const dirDestino = path.dirname(destinoFinal);
 
     ensureDir(dirDestino);
+
+    // backup se já existir
     backupIfExists(destinoFinal);
 
     try {
-      if (origem) {
-        const origemPath = path.resolve(DOWNLOADS_DIR, origem);
-        if (!fs.existsSync(origemPath)) {
-          throw new Error(`Arquivo de origem não encontrado: ${origemPath}`);
-        }
-        fs.copyFileSync(origemPath, destinoFinal);
-        log(`OK: Arquivo copiado de origem ${origemPath} -> ${destinoFinal}`);
-        console.log(`📄 Arquivo copiado: ${destinoFinal}`);
-      } else {
-        fs.writeFileSync(destinoFinal, conteudo, "utf-8");
-        log(`OK: Arquivo gerado/atualizado: ${destinoFinal}`);
-        console.log(`📄 Arquivo gerado/atualizado: ${destinoFinal}`);
-      }
+      fs.writeFileSync(destinoFinal, conteudo, "utf-8");
+      console.log(`📄 Arquivo gerado/atualizado: ${destinoFinal}`);
+      log(`OK: Arquivo gerado/atualizado: ${destinoFinal}`);
     } catch (err) {
       console.log(`❌ Erro ao escrever arquivo ${destinoFinal}:`, err.message);
       log(`ERRO escrita arquivo ${destinoFinal}: ${err.message}`);
     }
   }
 
+  // mover JSON para histórico
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
   const novoNome = `${stamp}__${nomeArquivo}`;
   const destinoJson = path.join(JSONS_HISTORY_DIR, novoNome);

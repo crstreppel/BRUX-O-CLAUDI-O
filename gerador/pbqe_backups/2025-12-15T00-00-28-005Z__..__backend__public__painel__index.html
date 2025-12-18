@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Central - PBQE-C V2</title>
+  <link rel="stylesheet" href="painel.css">
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="page-dashboard">
+
+  <div class="dashboard-wrapper">
+
+    <header class="dashboard-header">
+      <div>
+        <h1 class="dashboard-title">Painel<br>Central</h1>
+        <p class="dashboard-subtitle">Petropolitan • PBQE-C V2</p>
+      </div>
+
+      <div class="user-info">
+        <span id="usuario-nome" class="user-name">Carregando</span>
+        <button id="btn-sair" class="btn btn-danger btn-sm">Sair</button>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+
+      <section class="dashboard-section">
+        <header class="section-header">
+          <h2 class="section-title">Atalhos rápidos</h2>
+          <p class="section-description">
+            Use os atalhos abaixo para navegar pelos módulos principais.
+          </p>
+        </header>
+
+        <div class="cards-grid">
+
+          <article class="dashboard-card">
+            <h3>Usuários & Autenticação</h3>
+            <p>Gerenciar cadastro, confirmação de e-mail e login.</p>
+            <button class="btn btn-primary btn-full">
+              Ir para Login
+            </button>
+          </article>
+
+          <article class="dashboard-card is-disabled">
+            <h3>Clientes</h3>
+            <p>Módulo reservado para evolução futura da V2.</p>
+            <span class="tag">Em breve</span>
+          </article>
+
+          <article class="dashboard-card is-disabled">
+            <h3>Movimentos</h3>
+            <p>Fluxo financeiro integrado ao Sistema Central.</p>
+            <span class="tag">Em breve</span>
+          </article>
+
+        </div>
+      </section>
+
+      <section class="dashboard-section">
+        <header class="section-header">
+          <h2 class="section-title">Acesso & Segurança</h2>
+          <p class="section-description">
+            Controle de permissões e perfis do sistema.
+          </p>
+        </header>
+
+        <div class="cards-grid">
+
+          <article class="dashboard-card">
+            <h3>Roles & Perfis de Acesso</h3>
+            <p>Gerenciar grupos de acesso e permissões vinculadas.</p>
+            <button class="btn btn-primary btn-full">
+              Ir para Roles
+            </button>
+          </article>
+
+          <article class="dashboard-card">
+            <h3>Permissões do Sistema</h3>
+            <p>Controlar ações permitidas em cada módulo.</p>
+            <button class="btn btn-primary btn-full">
+              Ir para Permissões
+            </button>
+          </article>
+
+        </div>
+      </section>
+
+      <section class="dashboard-section">
+        <header class="section-header">
+          <h2 class="section-title">Status do Sistema</h2>
+        </header>
+
+        <div class="status-box">
+          Painel carregado com sucesso. Segurança PBQE-C ativa.
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <script src="/modules/shared/session.js"></script>
+  <script src="/modules/shared/api.js"></script>
+  <script src="painel.js"></script>
+</body>
+</html>

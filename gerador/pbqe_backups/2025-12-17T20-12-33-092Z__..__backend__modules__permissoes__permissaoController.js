@@ -1,4 +1,4 @@
-const Role = require('./roleModel');
+const Permissao = require('./permissaoModel');
 const Status = require('../status/statusModel');
 
 module.exports = {
@@ -10,12 +10,12 @@ module.exports = {
         return res.status(400).json({ erro: 'Campos obrigatórios ausentes.' });
       }
 
-      const existente = await Role.findOne({ where: { nome } });
+      const existente = await Permissao.findOne({ where: { nome } });
       if (existente) {
-        return res.status(400).json({ erro: 'Já existe um role com esse nome.' });
+        return res.status(400).json({ erro: 'Já existe uma permissão com esse nome.' });
       }
 
-      const novo = await Role.create({
+      const novo = await Permissao.create({
         nome,
         descricao,
         statusId,
@@ -30,7 +30,7 @@ module.exports = {
 
   async listar(req, res) {
     try {
-      const dados = await Role.findAll({
+      const dados = await Permissao.findAll({
         include: [
           {
             model: Status,
@@ -49,7 +49,7 @@ module.exports = {
       const { id } = req.params;
       const { nome, descricao, ativo, statusId } = req.body;
 
-      const registro = await Role.findByPk(id);
+      const registro = await Permissao.findByPk(id);
       if (!registro) {
         return res.status(404).json({ erro: 'Registro não encontrado.' });
       }
@@ -73,7 +73,7 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      const registro = await Role.findByPk(id);
+      const registro = await Permissao.findByPk(id);
       if (!registro) {
         return res.status(404).json({ erro: 'Registro não encontrado.' });
       }

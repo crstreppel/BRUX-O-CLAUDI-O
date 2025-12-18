@@ -1,43 +1,29 @@
 (() => {
-  console.log('[ROLES] script carregou');
+  const api = window.api;
 
   let roles = [];
   let roleEditando = null;
   let rolePermissaoAtual = null;
 
-  let els = {};
-
-  function mapearElementos() {
-    console.log('[ROLES] mapeando elementos DOM');
-
-    els = {
-      nome: document.getElementById('nome'),
-      descricao: document.getElementById('descricao'),
-      statusId: document.getElementById('statusId'),
-      ativo: document.getElementById('ativo'),
-      btnSalvar: document.getElementById('btn-salvar'),
-      btnCancelar: document.getElementById('btn-cancelar'),
-      btnAtualizar: document.getElementById('btn-atualizar'),
-      tbody: document.getElementById('tbody-roles'),
-      msg: document.getElementById('msg'),
-      badgeEdit: document.getElementById('role-editing-badge'),
-      cardPerms: document.getElementById('card-permissoes'),
-      permsRoleNome: document.getElementById('perms-role-nome'),
-      listaPermsAtuais: document.getElementById('lista-perms-atuais'),
-      listaPermsTodas: document.getElementById('lista-perms-todas'),
-      btnFecharPerms: document.getElementById('btn-fechar-perms')
-    };
-
-    Object.entries(els).forEach(([k, v]) => {
-      if (!v) {
-        console.error(`[ROLES][DOM] elemento NÃO encontrado: ${k}`);
-      }
-    });
-  }
+  const els = {
+    nome: document.getElementById('nome'),
+    descricao: document.getElementById('descricao'),
+    statusId: document.getElementById('statusId'),
+    ativo: document.getElementById('ativo'),
+    btnSalvar: document.getElementById('btn-salvar'),
+    btnCancelar: document.getElementById('btn-cancelar'),
+    btnAtualizar: document.getElementById('btn-atualizar'),
+    tbody: document.getElementById('tbody-roles'),
+    msg: document.getElementById('msg'),
+    badgeEdit: document.getElementById('role-editing-badge'),
+    cardPerms: document.getElementById('card-permissoes'),
+    permsRoleNome: document.getElementById('perms-role-nome'),
+    listaPermsAtuais: document.getElementById('lista-perms-atuais'),
+    listaPermsTodas: document.getElementById('lista-perms-todas'),
+    btnFecharPerms: document.getElementById('btn-fechar-perms')
+  };
 
   function showMsg(texto, tipo = 'ok') {
-    console.log('[ROLES][MSG]', texto, tipo);
-    if (!els.msg) return;
     els.msg.textContent = texto;
     els.msg.className = `msg ${tipo}`;
     els.msg.style.display = 'block';
@@ -45,7 +31,6 @@
   }
 
   function limparForm() {
-    console.log('[ROLES] limparForm');
     roleEditando = null;
     els.nome.value = '';
     els.descricao.value = '';
@@ -57,20 +42,16 @@
   }
 
   async function listarRoles() {
-    console.log('[ROLES] listarRoles');
     try {
-      const data = await apiFetch('/api/roles/listar');
-      console.log('[ROLES] dados recebidos', data);
-      roles = data || [];
+      const res = await api.get('/roles/listar');
+      roles = res.data || [];
       renderTabela();
     } catch (err) {
-      console.error('[ROLES] erro listarRoles', err);
       tratarErro(err);
     }
   }
 
   function renderTabela() {
-    console.log('[ROLES] renderTabela', roles.length);
     els.tbody.innerHTML = '';
     roles.forEach(r => {
       const tr = document.createElement('tr');
@@ -95,7 +76,6 @@
   }
 
   async function salvarRole() {
-    console.log('[ROLES] salvarRole');
     const payload = {
       nome: els.nome.value.trim(),
       descricao: els.descricao.value.trim(),
@@ -105,28 +85,20 @@
     try {
       if (roleEditando) {
         payload.ativo = els.ativo.checked;
-        await apiFetch(`/api/roles/atualizar/${roleEditando.id}`, {
-          method: 'PUT',
-          body: JSON.stringify(payload)
-        });
+        await api.put(`/roles/atualizar/${roleEditando.id}`, payload);
         showMsg('Role atualizada com sucesso');
       } else {
-        await apiFetch('/api/roles/criar', {
-          method: 'POST',
-          body: JSON.stringify(payload)
-        });
+        await api.post('/roles/criar', payload);
         showMsg('Role criada com sucesso');
       }
       limparForm();
       listarRoles();
     } catch (err) {
-      console.error('[ROLES] erro salvarRole', err);
       tratarErro(err);
     }
   }
 
   function editarRole(role) {
-    console.log('[ROLES] editarRole', role);
     roleEditando = role;
     els.nome.value = role.nome;
     els.descricao.value = role.descricao;
@@ -138,20 +110,17 @@
   }
 
   async function excluirRole(id) {
-    console.log('[ROLES] excluirRole', id);
     if (!confirm('Confirma exclusão desta role?')) return;
     try {
-      await apiFetch(`/api/roles/excluir/${id}`, { method: 'DELETE' });
+      await api.delete(`/roles/excluir/${id}`);
       showMsg('Role excluída');
       listarRoles();
     } catch (err) {
-      console.error('[ROLES] erro excluirRole', err);
       tratarErro(err);
     }
   }
 
   async function abrirPermissoes(role) {
-    console.log('[ROLES] abrirPermissoes', role);
     rolePermissaoAtual = role;
     els.cardPerms.style.display = 'block';
     els.permsRoleNome.innerText = role.nome;
@@ -159,19 +128,16 @@
   }
 
   async function carregarPermissoes() {
-    console.log('[ROLES] carregarPermissoes');
     try {
-      const atuais = await apiFetch(`/api/roles/${rolePermissaoAtual.id}/permissoes`);
-      const todas = await apiFetch('/api/permissoes/listar');
-      renderPermissoes(atuais.permissoes || [], todas || []);
+      const atuais = await api.get(`/roles/${rolePermissaoAtual.id}/permissoes`);
+      const todas = await api.get('/permissoes/listar');
+      renderPermissoes(atuais.data.permissoes || [], todas.data || []);
     } catch (err) {
-      console.error('[ROLES] erro carregarPermissoes', err);
       tratarErro(err);
     }
   }
 
   function renderPermissoes(atuais, todas) {
-    console.log('[ROLES] renderPermissoes', atuais.length, todas.length);
     els.listaPermsAtuais.innerHTML = '';
     els.listaPermsTodas.innerHTML = '';
 
@@ -193,51 +159,39 @@
   }
 
   async function adicionarPermissao(permissaoId) {
-    console.log('[ROLES] adicionarPermissao', permissaoId);
     try {
-      await apiFetch(`/api/roles/${rolePermissaoAtual.id}/permissoes/adicionar`, {
-        method: 'POST',
-        body: JSON.stringify({ permissaoId })
-      });
+      await api.post(`/roles/${rolePermissaoAtual.id}/permissoes/adicionar`, { permissaoId });
       carregarPermissoes();
     } catch (err) {
-      console.error('[ROLES] erro adicionarPermissao', err);
       tratarErro(err);
     }
   }
 
   async function removerPermissao(permissaoId) {
-    console.log('[ROLES] removerPermissao', permissaoId);
     try {
-      await apiFetch(`/api/roles/${rolePermissaoAtual.id}/permissoes/remover`, {
-        method: 'DELETE',
-        body: JSON.stringify({ permissaoId })
-      });
+      await api.delete(
+        `/roles/${rolePermissaoAtual.id}/permissoes/remover`,
+        { data: { permissaoId } }
+      );
       carregarPermissoes();
     } catch (err) {
-      console.error('[ROLES] erro removerPermissao', err);
       tratarErro(err);
     }
   }
 
   function tratarErro(err) {
-    console.error('[ROLES] tratarErro', err);
-    if (err && err.erro) {
-      showMsg(err.erro, 'erro');
-      return;
+    if (err.response) {
+      if (err.response.status === 401) return showMsg('Sessão expirada', 'erro');
+      if (err.response.status === 403) return showMsg('Acesso negado', 'erro');
+      if (err.response.data?.erro) return showMsg(err.response.data.erro, 'erro');
     }
-    showMsg('Erro inesperado (ver console)', 'erro');
+    showMsg('Erro inesperado', 'erro');
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    console.log('[ROLES] DOMContentLoaded');
-    mapearElementos();
+  els.btnSalvar.onclick = salvarRole;
+  els.btnCancelar.onclick = limparForm;
+  els.btnAtualizar.onclick = listarRoles;
+  els.btnFecharPerms.onclick = () => (els.cardPerms.style.display = 'none');
 
-    els.btnSalvar.onclick = salvarRole;
-    els.btnCancelar.onclick = limparForm;
-    els.btnAtualizar.onclick = listarRoles;
-    els.btnFecharPerms.onclick = () => (els.cardPerms.style.display = 'none');
-
-    listarRoles();
-  });
+  listarRoles();
 })();

@@ -1,4 +1,4 @@
-// PBQE-C • API Fetch Centralizado (RBAC correto: 401 ≠ 403)
+// PBQE-C • API Fetch Centralizado (fix logout em rota pública)
 async function apiFetch(url, options = {}) {
   const token = Session.getToken();
 
@@ -12,15 +12,14 @@ async function apiFetch(url, options = {}) {
 
   const response = await fetch(url, { ...options, headers });
 
-  // 🔐 Logout APENAS se não autenticado
-  if (response.status === 401 && token) {
+  // 🔐 Auto-logout SOMENTE se houver sessão ativa
+  if ((response.status === 401 || response.status === 403) && token) {
     Session.logout();
     return;
   }
 
   const data = await response.json();
 
-  // 🚫 403 = autenticado sem permissão (não derruba sessão)
   if (!response.ok) {
     throw data;
   }

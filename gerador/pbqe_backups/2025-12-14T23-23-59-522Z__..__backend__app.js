@@ -14,12 +14,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Rotas de API (PBQE-C)
 const usuariosRoutes = require('./modules/usuarios/usuariosRoutes');
-const rolesRoutes = require('./modules/roles/roleRoutes');
-const permissoesRoutes = require('./modules/permissoes/permissaoRoutes');
-
 app.use('/api/usuarios', usuariosRoutes);
-app.use('/api/roles', rolesRoutes);
-app.use('/api/permissoes', permissoesRoutes);
 
 // Rota inicial
 app.get('/', (req, res) => {

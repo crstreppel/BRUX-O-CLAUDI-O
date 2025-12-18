@@ -1,0 +1,7 @@
+[
+  {
+    "caminho": "../backend",
+    "arquivo": "app.js",
+    "conteudo": "const express = require('express');\nconst path = require('path');\nconst sequelize = require('./config/connection');\nconst initAssociations = require('./config/associations');\n\nconst app = express();\n\n// Middlewares\napp.use(express.json());\napp.use(express.urlencoded({ extended: true }));\n\n// Arquivos est\u00e1ticos\napp.use(express.static(path.join(__dirname, 'public')));\n\n// Rotas de API (PBQE-C)\nconst usuariosRoutes = require('./modules/usuarios/usuariosRoutes');\nconst rolesRoutes = require('./modules/roles/roleRoutes');\nconst permissoesRoutes = require('./modules/permissoes/permissaoRoutes');\n\napp.use('/api/usuarios', usuariosRoutes);\napp.use('/api/roles', rolesRoutes);\napp.use('/api/permissoes', permissoesRoutes);\n\n// Rota inicial\napp.get('/', (req, res) => {\n  res.send('<h1>\ud83d\udd25 Servidor PBQE-C rodando!</h1>');\n});\n\n// Inicializa\u00e7\u00e3o das associa\u00e7\u00f5es (AP\u00d3S models carregados)\ninitAssociations();\n\n// Inicializa\u00e7\u00e3o com sync do banco\nconst PORT = 3000;\n\nsequelize.sync()\n  .then(() => {\n    console.log('\ud83d\uddc2\ufe0f  Banco sincronizado com Sequelize.');\n    app.listen(PORT, () => console.log(`\ud83d\udd25 Servidor rodando na porta ${PORT}`));\n  })\n  .catch(err => {\n    console.error('\u274c Erro ao sincronizar banco:', err);\n  });\n\nmodule.exports = app;"
+  }
+]

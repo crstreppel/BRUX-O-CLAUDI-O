@@ -2,16 +2,18 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../../config/connection');
 
 const Status = sequelize.define('Status', {
-  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true
+  },
   nome: { type: DataTypes.STRING, allowNull: false, unique: true },
   descricao: { type: DataTypes.STRING, allowNull: true },
-  ativo: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
-  deletedAt: { type: DataTypes.DATE },
-  createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
-  updatedAt: { type: DataTypes.DATE, allowNull: false }
+  ativo: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true }
 }, {
   tableName: 'status',
-  paranoid: true
+  paranoid: true,
+  underscored: true
 });
 
 module.exports = Status;

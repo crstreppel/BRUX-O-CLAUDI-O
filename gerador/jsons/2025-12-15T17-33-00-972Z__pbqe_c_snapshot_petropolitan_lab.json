@@ -1,0 +1,36 @@
+{
+  "pbqe_c_version": "1.0",
+  "tag": "PBQE-C_SNAPSHOT_PETROPOLITAN_LAB",
+  "context": {
+    "environment": "LAB",
+    "project": "Petropolitan",
+    "responsible": "Brux\u00e3o",
+    "objective": "Snapshot t\u00e9cnico estrutural e de banco de dados"
+  },
+  "inputs": {
+    "directories": [
+      "backend/modules",
+      "backend/public"
+    ],
+    "database": {
+      "engine": "postgresql",
+      "host": "localhost",
+      "port": 5432,
+      "name": "petropolitan_lab",
+      "user": "bruxao",
+      "password": "bruxao123"
+    }
+  },
+  "execution": {
+    "type": "nodejs",
+    "script": "snapshot_sistema.js"
+  },
+  "output": {
+    "file": "C:\\Users\\Claudio\\Desktop\\petropolitan\\sistema_Petropolian\\Petropolitan_Lab\\snapshot_petropolitan_lab.txt"
+  },
+  "rules": [
+    "Somente leitura",
+    "Nenhuma altera\u00e7\u00e3o estrutural",
+    "Execu\u00e7\u00e3o manual ou automatizada via wrapper"
+  ]
+}

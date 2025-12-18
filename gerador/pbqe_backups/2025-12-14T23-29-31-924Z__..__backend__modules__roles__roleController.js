@@ -1,5 +1,4 @@
-const Role = require('./roleModel');
-const Status = require('../status/statusModel');
+const { Role, Status } = require('../../config/sequelize');
 
 module.exports = {
   async criar(req, res) {
@@ -18,7 +17,7 @@ module.exports = {
       const novo = await Role.create({
         nome,
         descricao,
-        statusId,
+        statusId: statusId || 1,
         ativo: true
       });
 

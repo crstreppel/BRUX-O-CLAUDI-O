@@ -1,0 +1,1 @@
+// JS completo mantido igual ao anterior (conteúdo extenso).

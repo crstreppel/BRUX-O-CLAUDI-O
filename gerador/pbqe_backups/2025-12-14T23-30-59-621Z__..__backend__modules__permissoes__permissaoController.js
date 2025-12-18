@@ -1,29 +1,31 @@
-const Permissao = require('./permissaoModel');
-const Status = require('../status/statusModel');
+const { Permissao, Status } = require('../../config/sequelize');
 
 module.exports = {
   async criar(req, res) {
     try {
-      const { nome, chave, descricao, statusId } = req.body;
+      const { descricao, modulo, acao } = req.body;
 
-      if (!nome || !chave || !statusId) {
+      if (!descricao || !modulo || !acao) {
         return res.status(400).json({ erro: 'Campos obrigatórios ausentes.' });
       }
+
+      const chave = `${modulo}.${acao}`;
 
       const existente = await Permissao.findOne({ where: { chave } });
       if (existente) {
         return res.status(400).json({ erro: 'Já existe uma permissão com essa chave.' });
       }
 
-      const novo = await Permissao.create({
-        nome,
-        chave,
+      const nova = await Permissao.create({
         descricao,
-        statusId,
+        modulo,
+        acao,
+        chave,
+        statusId: 1,
         ativo: true
       });
 
-      return res.status(201).json(novo);
+      return res.status(201).json(nova);
     } catch (err) {
       return res.status(500).json({ erro: err.message });
     }
@@ -32,11 +34,9 @@ module.exports = {
   async listar(req, res) {
     try {
       const dados = await Permissao.findAll({
-        where: { ativo: true },
-        include: [
-          { model: Status, as: 'status' }
-        ]
+        include: [{ model: Status, as: 'status' }]
       });
+
       return res.json(dados);
     } catch (err) {
       return res.status(500).json({ erro: err.message });
@@ -46,22 +46,32 @@ module.exports = {
   async atualizar(req, res) {
     try {
       const { id } = req.params;
-      const { nome, chave, descricao, ativo, statusId } = req.body;
+      const { descricao, modulo, acao, ativo, statusId } = req.body;
 
       const registro = await Permissao.findByPk(id);
       if (!registro) {
         return res.status(404).json({ erro: 'Registro não encontrado.' });
       }
 
-      const camposAtualizar = {};
+      const campos = {};
 
-      if (nome !== undefined) camposAtualizar.nome = nome;
-      if (chave !== undefined) camposAtualizar.chave = chave;
-      if (descricao !== undefined) camposAtualizar.descricao = descricao;
-      if (ativo !== undefined) camposAtualizar.ativo = ativo;
-      if (statusId !== undefined) camposAtualizar.statusId = statusId;
+      if (descricao !== undefined) campos.descricao = descricao;
+      if (modulo !== undefined) campos.modulo = modulo;
+      if (acao !== undefined) campos.acao = acao;
+      if (statusId !== undefined) campos.statusId = statusId;
+      if (ativo !== undefined) campos.ativo = ativo;
 
-      await registro.update(camposAtualizar);
+      if (modulo && acao) {
+        campos.chave = `${modulo}.${acao}`;
+        const existente = await Permissao.findOne({
+          where: { chave: campos.chave }
+        });
+        if (existente && existente.id !== registro.id) {
+          return res.status(400).json({ erro: 'Outra permissão já usa esta chave.' });
+        }
+      }
+
+      await registro.update(campos);
 
       return res.json({ mensagem: 'Atualizado com sucesso.' });
     } catch (err) {
@@ -78,8 +88,10 @@ module.exports = {
         return res.status(404).json({ erro: 'Registro não encontrado.' });
       }
 
-      await registro.update({ ativo: false });
-      await registro.destroy();
+      await registro.update({
+        ativo: false,
+        deletedAt: new Date()
+      });
 
       return res.json({ mensagem: 'Excluído com sucesso.' });
     } catch (err) {
