@@ -11,16 +11,14 @@ const JWT_SECRET = require('../../config/auth').jwtSecret;
 module.exports = {
   async login(req, res) {
     try {
-      let { email, senha } = req.body;
+      const { email, senha } = req.body;
 
       if (!email || !senha) {
         return res.status(400).json({ erro: 'E-mail e senha são obrigatórios.' });
       }
 
-      const emailNorm = email.trim().toLowerCase();
-
       const usuario = await Usuario.findOne({
-        where: { email: emailNorm },
+        where: { email },
         include: [
           {
             model: Role,

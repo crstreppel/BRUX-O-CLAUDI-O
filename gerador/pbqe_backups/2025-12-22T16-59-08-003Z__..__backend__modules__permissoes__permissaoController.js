@@ -4,9 +4,9 @@ const Status = require('../status/statusModel');
 module.exports = {
   async criar(req, res) {
     try {
-      const { nome, chave, descricao } = req.body;
+      const { nome, chave, descricao, statusId } = req.body;
 
-      if (!nome || !chave) {
+      if (!nome || !chave || !statusId) {
         return res.status(400).json({ erro: 'Campos obrigatórios ausentes.' });
       }
 
@@ -15,16 +15,11 @@ module.exports = {
         return res.status(400).json({ erro: 'Já existe uma permissão com essa chave.' });
       }
 
-      const statusAtivo = await Status.findOne({ where: { nome: 'ATIVO', ativo: true } });
-      if (!statusAtivo) {
-        return res.status(500).json({ erro: 'Status ATIVO não encontrado. Sistema inconsistente.' });
-      }
-
       const novo = await Permissao.create({
         nome,
         chave,
         descricao,
-        statusId: statusAtivo.id,
+        statusId,
         ativo: true
       });
 

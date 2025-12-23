@@ -1,10 +1,13 @@
+// ======================================================================
+// 🧙‍♂️ roleController.js • PBQE-C – Ajuste de status automático no criar
+// ----------------------------------------------------------------------
 const Role = require('./roleModel');
 const Status = require('../status/statusModel');
 
 module.exports = {
   async criar(req, res) {
     try {
-      const { nome, descricao, statusId } = req.body;
+      const { nome, descricao } = req.body;
 
       if (!nome || !descricao) {
         return res.status(400).json({ erro: 'Campos obrigatórios ausentes.' });
@@ -15,10 +18,16 @@ module.exports = {
         return res.status(400).json({ erro: 'Já existe um role com esse nome.' });
       }
 
+      // 🔐 Status padrão definido pelo backend
+      const statusAtivo = await Status.findOne({ where: { nome: 'ATIVO' } });
+      if (!statusAtivo) {
+        return res.status(500).json({ erro: 'Status ATIVO não encontrado.' });
+      }
+
       const novo = await Role.create({
         nome,
         descricao,
-        statusId,
+        statusId: statusAtivo.id,
         ativo: true
       });
 

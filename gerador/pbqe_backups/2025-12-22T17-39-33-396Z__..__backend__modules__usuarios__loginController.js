@@ -6,40 +6,37 @@ const Usuario = require('./usuarioModel');
 const Role = require('../roles/roleModel');
 const Permissao = require('../permissoes/permissaoModel');
 
+// Segredo JWT centralizado (PBQE-C)
 const JWT_SECRET = require('../../config/auth').jwtSecret;
 
 module.exports = {
   async login(req, res) {
     try {
-      let { email, senha } = req.body;
+      const { email, senha } = req.body;
 
       if (!email || !senha) {
         return res.status(400).json({ erro: 'E-mail e senha são obrigatórios.' });
       }
 
-      const emailNorm = email.trim().toLowerCase();
-
       const usuario = await Usuario.findOne({
-        where: { email: emailNorm },
+        where: { email },
         include: [
           {
             model: Role,
             as: 'role',
-            include: [ { model: Permissao, as: 'permissoes' } ]
+            include: [
+              {
+                model: Permissao,
+                as: 'permissoes'
+              }
+            ]
           }
         ]
       });
 
+      // Resposta genérica para evitar enumeração de usuários
       if (!usuario) {
         return res.status(401).json({ erro: 'Credenciais inválidas.' });
-      }
-
-      if (!usuario.emailVerificado) {
-        return res.status(401).json({
-          ok: false,
-          motivo: 'EMAIL_NAO_VERIFICADO',
-          mensagem: 'Confirme seu e-mail antes de entrar.'
-        });
       }
 
       if (!usuario.ativo) {

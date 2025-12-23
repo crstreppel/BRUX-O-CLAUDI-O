@@ -1,6 +1,3 @@
-// ======================================================================
-// 🧙‍♂️ roles.js • PBQE-C V2 – Módulo Roles (ajuste statusId removido)
-// ----------------------------------------------------------------------
 (() => {
   console.log('[ROLES] script carregou');
 
@@ -16,6 +13,7 @@
     els = {
       nome: document.getElementById('nome'),
       descricao: document.getElementById('descricao'),
+      statusId: document.getElementById('statusId'),
       ativo: document.getElementById('ativo'),
       btnSalvar: document.getElementById('btn-salvar'),
       btnCancelar: document.getElementById('btn-cancelar'),
@@ -51,6 +49,7 @@
     roleEditando = null;
     els.nome.value = '';
     els.descricao.value = '';
+    els.statusId.value = 1;
     els.ativo.checked = true;
     els.btnCancelar.style.display = 'none';
     els.badgeEdit.style.display = 'none';
@@ -99,7 +98,8 @@
     console.log('[ROLES] salvarRole');
     const payload = {
       nome: els.nome.value.trim(),
-      descricao: els.descricao.value.trim()
+      descricao: els.descricao.value.trim(),
+      statusId: Number(els.statusId.value)
     };
 
     try {
@@ -130,6 +130,7 @@
     roleEditando = role;
     els.nome.value = role.nome;
     els.descricao.value = role.descricao;
+    els.statusId.value = role.statusId || 1;
     els.ativo.checked = !!role.ativo;
     els.btnCancelar.style.display = 'inline-block';
     els.badgeEdit.style.display = 'inline-block';

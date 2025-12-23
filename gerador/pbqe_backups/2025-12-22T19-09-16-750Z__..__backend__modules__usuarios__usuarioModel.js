@@ -91,9 +91,23 @@ const Usuario = sequelize.define(
 );
 
 // ======================================================================
-// 🔐 PBQE-C – Hash da senha ocorre APENAS no controller
+// 🔐 Hooks PBQE-C – Hash automático da senha (Argon2id)
 // ----------------------------------------------------------------------
-// Hooks removidos para evitar double-hash
+Usuario.beforeCreate(async (usuario) => {
+  if (usuario.senhaHash) {
+    usuario.senhaHash = await argon2.hash(usuario.senhaHash, {
+      type: argon2.argon2id,
+    });
+  }
+});
+
+Usuario.beforeUpdate(async (usuario) => {
+  if (usuario.changed('senhaHash')) {
+    usuario.senhaHash = await argon2.hash(usuario.senhaHash, {
+      type: argon2.argon2id,
+    });
+  }
+});
 
 // ======================================================================
 // 🔎 Método de instância – Validação de senha

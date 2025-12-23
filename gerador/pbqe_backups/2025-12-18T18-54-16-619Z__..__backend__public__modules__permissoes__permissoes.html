@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestão de Permissões</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../global.css">
+  <link rel="stylesheet" href="./permissoes.css">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script defer src="./permissoes.js"></script>
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h1>Permissões</h1>
+      <p>Gerencie as permissões de acesso do sistema.</p>
+    </header>
+
+    <section class="form-section">
+      <h2 id="form-titulo">Nova permissão</h2>
+      <form id="form-permissao">
+        <input type="hidden" id="permissao-id">
+
+        <div class="campo">
+          <label for="nome">Nome</label>
+          <input type="text" id="nome" placeholder="Ex.: Listar usuários" required>
+        </div>
+
+        <div class="campo">
+          <label for="chave">Chave</label>
+          <input type="text" id="chave" placeholder="Ex.: usuarios.listar" required>
+        </div>
+
+        <div class="campo">
+          <label for="descricao">Descrição</label>
+          <input type="text" id="descricao" placeholder="Ex.: Permite listar usuários">
+        </div>
+
+        <div class="botoes-form">
+          <button type="submit" id="btn-salvar">Salvar</button>
+          <button type="button" id="btn-cancelar">Cancelar</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="lista-section">
+      <h2>Permissões cadastradas</h2>
+      <table class="tabela">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Chave</th>
+            <th>Descrição</th>
+            <th>Status</th>
+            <th>Ativo</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="permissoes-tbody">
+          <!-- preenchido via JS -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>

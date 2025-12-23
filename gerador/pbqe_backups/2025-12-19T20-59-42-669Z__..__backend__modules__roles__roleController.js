@@ -1,30 +1,24 @@
-const Permissao = require('./permissaoModel');
+const Role = require('./roleModel');
 const Status = require('../status/statusModel');
 
 module.exports = {
   async criar(req, res) {
     try {
-      const { nome, chave, descricao } = req.body;
+      const { nome, descricao, statusId } = req.body;
 
-      if (!nome || !chave) {
+      if (!nome || !descricao) {
         return res.status(400).json({ erro: 'Campos obrigatórios ausentes.' });
       }
 
-      const existente = await Permissao.findOne({ where: { chave } });
+      const existente = await Role.findOne({ where: { nome } });
       if (existente) {
-        return res.status(400).json({ erro: 'Já existe uma permissão com essa chave.' });
+        return res.status(400).json({ erro: 'Já existe um role com esse nome.' });
       }
 
-      const statusAtivo = await Status.findOne({ where: { nome: 'ATIVO', ativo: true } });
-      if (!statusAtivo) {
-        return res.status(500).json({ erro: 'Status ATIVO não encontrado. Sistema inconsistente.' });
-      }
-
-      const novo = await Permissao.create({
+      const novo = await Role.create({
         nome,
-        chave,
         descricao,
-        statusId: statusAtivo.id,
+        statusId,
         ativo: true
       });
 
@@ -36,10 +30,12 @@ module.exports = {
 
   async listar(req, res) {
     try {
-      const dados = await Permissao.findAll({
-        where: { ativo: true },
+      const dados = await Role.findAll({
         include: [
-          { model: Status, as: 'status' }
+          {
+            model: Status,
+            as: 'status'
+          }
         ]
       });
       return res.json(dados);
@@ -51,9 +47,9 @@ module.exports = {
   async atualizar(req, res) {
     try {
       const { id } = req.params;
-      const { nome, chave, descricao, ativo, statusId } = req.body;
+      const { nome, descricao, ativo, statusId } = req.body;
 
-      const registro = await Permissao.findByPk(id);
+      const registro = await Role.findByPk(id);
       if (!registro) {
         return res.status(404).json({ erro: 'Registro não encontrado.' });
       }
@@ -61,7 +57,6 @@ module.exports = {
       const camposAtualizar = {};
 
       if (nome !== undefined) camposAtualizar.nome = nome;
-      if (chave !== undefined) camposAtualizar.chave = chave;
       if (descricao !== undefined) camposAtualizar.descricao = descricao;
       if (ativo !== undefined) camposAtualizar.ativo = ativo;
       if (statusId !== undefined) camposAtualizar.statusId = statusId;
@@ -78,13 +73,15 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      const registro = await Permissao.findByPk(id);
+      const registro = await Role.findByPk(id);
       if (!registro) {
         return res.status(404).json({ erro: 'Registro não encontrado.' });
       }
 
-      await registro.update({ ativo: false });
-      await registro.destroy();
+      await registro.update({
+        ativo: false,
+        deletedAt: new Date()
+      });
 
       return res.json({ mensagem: 'Excluído com sucesso.' });
     } catch (err) {

@@ -1,11 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log('[PERMISSOES] DOM carregado');
 
-  const api = window.apiFetch;
-  if (typeof api !== 'function') {
-    console.error('[PERMISSOES] apiFetch não disponível em window');
-  }
-
   const tbody = document.getElementById('permissoes-tbody');
   const form = document.getElementById('form-permissao');
   const formTitulo = document.getElementById('form-titulo');
@@ -15,13 +10,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputDescricao = document.getElementById('descricao');
   const btnCancelar = document.getElementById('btn-cancelar');
 
+  console.log('[PERMISSOES] Elementos capturados:', { tbody, form, formTitulo });
+
   async function carregarPermissoes() {
-    console.log('[PERMISSOES] GET /api/permissoes/listar');
+    console.log('[PERMISSOES] carregarPermissoes() chamado');
     try {
-      const dados = await api('/api/permissoes/listar');
+      console.log('[PERMISSOES] apiFetch GET /api/permissoes/listar');
+      const dados = await apiFetch('/api/permissoes/listar');
       console.log('[PERMISSOES] Dados recebidos:', dados);
 
       tbody.innerHTML = '';
+
       dados.forEach((item) => {
         const tr = document.createElement('tr');
         tr.dataset.id = item.id;
@@ -83,12 +82,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       if (!id) {
-        await api('/api/permissoes/criar', {
+        await apiFetch('/api/permissoes/criar', {
           method: 'POST',
           body: JSON.stringify({ nome, chave, descricao, statusId: '00000000-0000-0000-0000-000000000001' })
         });
       } else {
-        await api(`/api/permissoes/atualizar/${id}`, {
+        await apiFetch(`/api/permissoes/atualizar/${id}`, {
           method: 'PUT',
           body: JSON.stringify({ nome, chave, descricao })
         });
@@ -106,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!confirm('Confirma excluir esta permissão?')) return;
 
     try {
-      await api(`/api/permissoes/excluir/${id}`, { method: 'DELETE' });
+      await apiFetch(`/api/permissoes/excluir/${id}`, { method: 'DELETE' });
       carregarPermissoes();
     } catch (erro) {
       console.error('[PERMISSOES] ERRO excluirPermissao:', erro);

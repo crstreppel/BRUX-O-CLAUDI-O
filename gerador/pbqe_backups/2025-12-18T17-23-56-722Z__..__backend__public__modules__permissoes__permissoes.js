@@ -1,11 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('[PERMISSOES] DOM carregado');
-
-  const api = window.apiFetch;
-  if (typeof api !== 'function') {
-    console.error('[PERMISSOES] apiFetch não disponível em window');
-  }
-
   const tbody = document.getElementById('permissoes-tbody');
   const form = document.getElementById('form-permissao');
   const formTitulo = document.getElementById('form-titulo');
@@ -16,12 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnCancelar = document.getElementById('btn-cancelar');
 
   async function carregarPermissoes() {
-    console.log('[PERMISSOES] GET /api/permissoes/listar');
     try {
-      const dados = await api('/api/permissoes/listar');
-      console.log('[PERMISSOES] Dados recebidos:', dados);
-
+      const resposta = await axios.get('/permissoes/listar');
+      const dados = resposta.data || [];
       tbody.innerHTML = '';
+
       dados.forEach((item) => {
         const tr = document.createElement('tr');
         tr.dataset.id = item.id;
@@ -47,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tbody.appendChild(tr);
       });
     } catch (erro) {
-      console.error('[PERMISSOES] ERRO carregarPermissoes:', erro);
+      console.error('Erro ao carregar permissões:', erro);
       alert('Erro ao carregar permissões.');
     }
   }
@@ -83,22 +75,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       if (!id) {
-        await api('/api/permissoes/criar', {
-          method: 'POST',
-          body: JSON.stringify({ nome, chave, descricao, statusId: '00000000-0000-0000-0000-000000000001' })
-        });
+        await axios.post('/permissoes/criar', { nome, chave, descricao, statusId: '00000000-0000-0000-0000-000000000001' });
       } else {
-        await api(`/api/permissoes/atualizar/${id}`, {
-          method: 'PUT',
-          body: JSON.stringify({ nome, chave, descricao })
-        });
+        await axios.put(`/permissoes/atualizar/${id}`, { nome, chave, descricao });
       }
 
       limparForm();
       carregarPermissoes();
     } catch (erro) {
-      console.error('[PERMISSOES] ERRO salvarPermissao:', erro);
-      alert('Erro ao salvar permissão.');
+      console.error('Erro ao salvar permissão:', erro);
+      alert(erro.response?.data?.erro || 'Erro ao salvar permissão.');
     }
   }
 
@@ -106,11 +92,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!confirm('Confirma excluir esta permissão?')) return;
 
     try {
-      await api(`/api/permissoes/excluir/${id}`, { method: 'DELETE' });
+      await axios.delete(`/permissoes/excluir/${id}`);
       carregarPermissoes();
     } catch (erro) {
-      console.error('[PERMISSOES] ERRO excluirPermissao:', erro);
-      alert('Erro ao excluir permissão.');
+      console.error('Erro ao excluir permissão:', erro);
+      alert(erro.response?.data?.erro || 'Erro ao excluir permissão.');
     }
   }
 
