@@ -1,31 +1,30 @@
-// PBQE-C • API Fetch Centralizado (RBAC correto: 401 ≠ 403)
-async function apiFetch(url, options = {}) {
-  const token = Session.getToken();
+// PBQE-C • API Fetch Wrapper (sem throw para erro de negócio)
 
-  const headers = Object.assign({}, options.headers || {}, {
-    'Content-Type': 'application/json'
+async function apiFetch(url, options = {}) {
+  const response = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.headers || {})
+    },
+    ...options
   });
 
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+  let data = {};
+  try {
+    data = await response.json();
+  } catch (e) {
+    data = {};
   }
 
-  const response = await fetch(url, { ...options, headers });
-
-  // 🔐 Logout APENAS se não autenticado
-  if (response.status === 401 && token) {
-    Session.logout();
-    return;
-  }
-
-  const data = await response.json();
-
-  // 🚫 403 = autenticado sem permissão (não derruba sessão)
   if (!response.ok) {
-    throw data;
+    return {
+      ok: false,
+      status: response.status,
+      ...data
+    };
   }
 
-  return data;
+  return { ok: true, ...data };
 }
 
 window.apiFetch = apiFetch;

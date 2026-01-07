@@ -1,35 +1,36 @@
-// PBQE-C Gerador V4 – Modo Sentinela Supremo™ (PATCH: suporte a 'origem')
+// PBQE-C Gerador V4 – Modo Sentinela Supremo™
+// PATCH v4.3 – Execução do Executor com CWD fixo
 // -----------------------------------------------------------------------------
-// Novo comportamento:
-// - Se o item possuir a chave 'origem', o Gerador copia o arquivo de origem
-//   para o destino final (caminho + arquivo), em vez de usar 'conteudo'.
-// - Mantém compatibilidade total com JSONs antigos.
+// Correção:
+// - Força cwd para ddl_engine ao disparar o executor
+// - Garante caminhos relativos corretos no Windows
 // -----------------------------------------------------------------------------
 
 const fs = require("fs");
 const path = require("path");
+const { exec } = require("child_process");
 
 const GERADOR_ROOT = __dirname;
+const PROJECT_ROOT = path.resolve(GERADOR_ROOT, "..");
 const DOWNLOADS_DIR = path.join(process.env.USERPROFILE || "", "Downloads");
 const JSONS_HISTORY_DIR = path.join(GERADOR_ROOT, "jsons");
 const LOG_DIR = path.join(GERADOR_ROOT, "pbqe_logs");
 const BACKUP_DIR = path.join(GERADOR_ROOT, "pbqe_backups");
 
+const DDL_ENGINE_DIR = path.join(PROJECT_ROOT, "ddl_engine");
+const DDL_INPUT_DIR = path.join(DDL_ENGINE_DIR, "input");
+const DDL_EXECUTOR = path.join(DDL_ENGINE_DIR, "executor.js");
+
 function ensureDir(dir) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
-ensureDir(JSONS_HISTORY_DIR);
-ensureDir(LOG_DIR);
-ensureDir(BACKUP_DIR);
+[JSONS_HISTORY_DIR, LOG_DIR, BACKUP_DIR, DDL_INPUT_DIR].forEach(ensureDir);
 
 const LOG_FILE = path.join(LOG_DIR, "gerador_v4.log");
 
 function log(msg) {
-  const linha = `[${new Date().toISOString()}] ${msg}\n`;
-  fs.appendFileSync(LOG_FILE, linha, "utf-8");
+  fs.appendFileSync(LOG_FILE, `[${new Date().toISOString()}] ${msg}\n`, "utf-8");
 }
 
 function sleep(ms) {
@@ -37,55 +38,42 @@ function sleep(ms) {
 }
 
 function listarJSONsDownloads() {
-  if (!DOWNLOADS_DIR || !fs.existsSync(DOWNLOADS_DIR)) {
-    console.log("❌ Pasta Downloads não encontrada.");
-    log("ERRO: Pasta Downloads não encontrada.");
-    return [];
-  }
-
-  return fs
-    .readdirSync(DOWNLOADS_DIR)
-    .filter((f) => f.toLowerCase().endsWith(".json"));
+  if (!DOWNLOADS_DIR || !fs.existsSync(DOWNLOADS_DIR)) return [];
+  return fs.readdirSync(DOWNLOADS_DIR).filter((f) => f.toLowerCase().endsWith(".json"));
 }
 
-function backupIfExists(destinoFinal) {
-  if (!fs.existsSync(destinoFinal)) return;
-
-  const relPath = path.relative(GERADOR_ROOT, destinoFinal);
-  const safeRel = relPath.replace(/[\\\/:]/g, "__");
-  const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const backupName = `${stamp}__${safeRel}`;
-  const backupPath = path.join(BACKUP_DIR, backupName);
-
-  fs.copyFileSync(destinoFinal, backupPath);
-  log(`Backup criado: ${backupPath}`);
+function isDDL(json) {
+  if (Array.isArray(json)) {
+    return json[0] && (json[0].tipo === "table" || json[0].tipo === "database");
+  }
+  return json && (json.tipo === "table" || json.tipo === "database");
 }
 
 function processarJson(nomeArquivo) {
   const fullPath = path.join(DOWNLOADS_DIR, nomeArquivo);
-  log(`Iniciando processamento do JSON: ${nomeArquivo}`);
-
-  let conteudoRaw;
-  try {
-    conteudoRaw = fs.readFileSync(fullPath, "utf-8");
-  } catch (err) {
-    console.log(`❌ Erro ao ler JSON ${nomeArquivo}:`, err.message);
-    log(`ERRO leitura JSON ${nomeArquivo}: ${err.message}`);
-    return;
-  }
-
   let jsonData;
+
   try {
-    jsonData = JSON.parse(conteudoRaw);
-  } catch (err) {
-    console.log(`❌ JSON inválido (${nomeArquivo}). Confere o arquivo.`);
-    log(`ERRO parse JSON ${nomeArquivo}: ${err.message}`);
-    const erroDestino = path.join(JSONS_HISTORY_DIR, `erro_${nomeArquivo}`);
-    fs.renameSync(fullPath, erroDestino);
-    log(`JSON com erro movido para: ${erroDestino}`);
+    jsonData = JSON.parse(fs.readFileSync(fullPath, "utf-8"));
+  } catch {
+    log(`JSON inválido ignorado: ${nomeArquivo}`);
     return;
   }
 
+  // ===== DDL DISPATCH =====
+  if (isDDL(jsonData)) {
+    const destino = path.join(DDL_INPUT_DIR, nomeArquivo);
+    fs.renameSync(fullPath, destino);
+    log(`DDL JSON movido para ddl_engine/input: ${nomeArquivo}`);
+
+    exec(`node "${DDL_EXECUTOR}"`, { cwd: DDL_ENGINE_DIR }, () => {
+      log("Executor DDL disparado com CWD fixo.");
+    });
+
+    return;
+  }
+
+  // ===== FLUXO NORMAL =====
   const itens = Array.isArray(jsonData) ? jsonData : [jsonData];
 
   for (const item of itens) {
@@ -94,85 +82,29 @@ function processarJson(nomeArquivo) {
     const conteudo = item.conteudo ?? "";
     const origem = item.origem || null;
 
-    if (!arquivo) {
-      log(`AVISO: item sem 'arquivo' no JSON ${nomeArquivo}, ignorado.`);
-      continue;
-    }
+    if (!arquivo) continue;
 
     const destinoFinal = path.resolve(GERADOR_ROOT, caminho, arquivo);
-    const dirDestino = path.dirname(destinoFinal);
+    ensureDir(path.dirname(destinoFinal));
 
-    ensureDir(dirDestino);
-    backupIfExists(destinoFinal);
-
-    try {
-      if (origem) {
-        const origemPath = path.resolve(DOWNLOADS_DIR, origem);
-        if (!fs.existsSync(origemPath)) {
-          throw new Error(`Arquivo de origem não encontrado: ${origemPath}`);
-        }
-        fs.copyFileSync(origemPath, destinoFinal);
-        log(`OK: Arquivo copiado de origem ${origemPath} -> ${destinoFinal}`);
-        console.log(`📄 Arquivo copiado: ${destinoFinal}`);
-      } else {
-        fs.writeFileSync(destinoFinal, conteudo, "utf-8");
-        log(`OK: Arquivo gerado/atualizado: ${destinoFinal}`);
-        console.log(`📄 Arquivo gerado/atualizado: ${destinoFinal}`);
-      }
-    } catch (err) {
-      console.log(`❌ Erro ao escrever arquivo ${destinoFinal}:`, err.message);
-      log(`ERRO escrita arquivo ${destinoFinal}: ${err.message}`);
+    if (origem) {
+      const origemPath = path.resolve(DOWNLOADS_DIR, origem);
+      fs.copyFileSync(origemPath, destinoFinal);
+    } else {
+      fs.writeFileSync(destinoFinal, conteudo, "utf-8");
     }
   }
 
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const novoNome = `${stamp}__${nomeArquivo}`;
-  const destinoJson = path.join(JSONS_HISTORY_DIR, novoNome);
-  try {
-    fs.renameSync(fullPath, destinoJson);
-    log(`JSON movido para histórico: ${destinoJson}`);
-  } catch (err) {
-    console.log(`⚠️ Não foi possível mover ${nomeArquivo} para histórico:`, err.message);
-    log(`ERRO mover JSON ${nomeArquivo} para histórico: ${err.message}`);
-  }
+  fs.renameSync(fullPath, path.join(JSONS_HISTORY_DIR, `${stamp}__${nomeArquivo}`));
 }
 
 async function loopSentinela() {
-  console.log("============================================================");
-  console.log("🧙‍♂️ PBQE-C Gerador V4 – Modo Sentinela Supremo™");
-  console.log("============================================================");
-  console.log(`📂 Monitorando Downloads em: ${DOWNLOADS_DIR}`);
-  console.log("Pressione CTRL + C para encerrar.\n");
-  log("Sentinela iniciado.");
-
-  let ciclo = 0;
-
   while (true) {
-    ciclo += 1;
     const arquivos = listarJSONsDownloads();
-
-    if (arquivos.length === 0) {
-      if (ciclo % 10 === 1) {
-        console.log("🧭 Sentinela ativo. Nenhum JSON novo por enquanto...");
-      }
-      await sleep(1000);
-      continue;
-    }
-
-    console.log(`\n🔎 ${arquivos.length} JSON(s) detectado(s). Iniciando processamento...`);
-    log(`Detectados ${arquivos.length} JSON(s) para processamento.`);
-
-    for (const nome of arquivos) {
-      console.log(`\n✨ Processando: ${nome}`);
-      processarJson(nome);
-    }
-
-    console.log("\n✅ Lote concluído. Sentinela continua ativo.\n");
+    for (const nome of arquivos) processarJson(nome);
     await sleep(1000);
   }
 }
 
-loopSentinela().catch((err) => {
-  console.error("❌ Erro fatal no Sentinela:", err);
-  log(`ERRO FATAL: ${err.message}`);
-});
+loopSentinela();

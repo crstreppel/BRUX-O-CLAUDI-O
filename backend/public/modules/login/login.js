@@ -1,34 +1,59 @@
-// PBQE-C • Login integrado ao Session Manager
+// PBQE-C • Login integrado ao Session Manager (fluxo robusto)
+
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.querySelector('form');
+  const msgEl = document.getElementById('msgLogin');
+
+  function setMsg(html) {
+    if (!msgEl) return;
+    msgEl.innerHTML = html;
+    msgEl.style.display = 'block';
+  }
+
+  function clearMsg() {
+    if (!msgEl) return;
+    msgEl.innerHTML = '';
+    msgEl.style.display = 'none';
+  }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    clearMsg();
 
     const email = document.querySelector('#loginEmail')?.value;
     const senha = document.querySelector('#loginSenha')?.value;
 
     if (!email || !senha) {
-      alert('Email e senha obrigatórios');
+      setMsg('Email e senha obrigatórios');
       return;
     }
 
-    try {
-      const data = await apiFetch('/api/usuarios/login', {
-        method: 'POST',
-        body: JSON.stringify({ email, senha })
-      });
+    const data = await apiFetch('/api/usuarios/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, senha })
+    });
 
-      if (!data?.token || !data?.usuario) {
-        alert('Login inválido');
+    if (data.ok === false) {
+      if (data.motivo === 'EMAIL_NAO_VERIFICADO') {
+        setMsg(
+          'Seu e-mail ainda não foi confirmado.<br><br>' +
+          '<a href="/modules/confirmacao/confirmacao.html">Confirmar e-mail</a>' +
+          ' | ' +
+          '<a href="/modules/confirmacao/confirmacao.html#reenviar">Reenviar código</a>'
+        );
         return;
       }
 
-      Session.setSession({ token: data.token, usuario: data.usuario });
-      window.location.href = '/painel/index.html';
-
-    } catch (err) {
-      alert(err?.erro || 'Erro no login');
+      setMsg(data.erro || data.mensagem || 'Erro no login');
+      return;
     }
+
+    if (!data.token || !data.usuario) {
+      setMsg('Login inválido');
+      return;
+    }
+
+    Session.setSession({ token: data.token, usuario: data.usuario });
+    window.location.href = '/painel/index.html';
   });
 });

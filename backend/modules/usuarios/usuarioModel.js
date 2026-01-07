@@ -39,6 +39,12 @@ const Usuario = sequelize.define(
       field: 'email_verificado',
     },
 
+    emailVerificadoEm: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'email_verificado_em',
+    },
+
     emailToken: {
       type: DataTypes.STRING(255),
       allowNull: true,
@@ -93,7 +99,6 @@ const Usuario = sequelize.define(
 // ======================================================================
 // 🔐 PBQE-C – Hash da senha ocorre APENAS no controller
 // ----------------------------------------------------------------------
-// Hooks removidos para evitar double-hash
 
 // ======================================================================
 // 🔎 Método de instância – Validação de senha

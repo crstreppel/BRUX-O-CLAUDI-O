@@ -17,22 +17,28 @@ async function postJSON(url, payload) {
   return { ok: response.ok, status: response.status, data };
 }
 
+function getUsuarioId() {
+  return sessionStorage.getItem("usuarioId");
+}
+
 async function handleConfirmacao(event) {
   event.preventDefault();
-  const f = event.target;
 
-  const email = f.email?.value?.trim();
-  const codigo = f.codigo?.value?.trim();
+  const usuarioId = getUsuarioId();
+  const codigo = document.getElementById("confCodigo")?.value?.trim();
 
-  if (!email || !codigo) {
-    setMessageConfirm("Informe e-mail e código.", "error");
+  if (!usuarioId || !codigo) {
+    setMessageConfirm("Código inválido ou sessão expirada.", "error");
     return;
   }
 
   setMessageConfirm("Validando código...", "info");
 
   try {
-    const { ok, data, status } = await postJSON(`${API_BASE}/confirmar-codigo`, { email, codigo });
+    const { ok, data, status } = await postJSON(
+      `${API_BASE}/confirmar-codigo`,
+      { usuarioId, codigo }
+    );
 
     if (!ok || !data.sucesso) {
       setMessageConfirm(data.erro || `Erro ao confirmar (HTTP ${status}).`, "error");
@@ -40,21 +46,30 @@ async function handleConfirmacao(event) {
     }
 
     setMessageConfirm("E-mail confirmado com sucesso!", "success");
+
+    setTimeout(() => {
+      window.location.href = "/modules/login/login.html";
+    }, 1500);
+
   } catch {
     setMessageConfirm("Erro interno ao confirmar.", "error");
   }
 }
 
 async function handleReenviar() {
-  const email = document.getElementById("confEmail")?.value?.trim();
-  if (!email) {
-    setMessageConfirm("Digite o e-mail primeiro.", "error");
+  const usuarioId = getUsuarioId();
+
+  if (!usuarioId) {
+    setMessageConfirm("Sessão expirada. Refaça o cadastro.", "error");
     return;
   }
 
-  setMessageConfirm("Reenviando...", "info");
+  setMessageConfirm("Reenviando código...", "info");
 
-  const { ok, data, status } = await postJSON(`${API_BASE}/reenviar-confirmacao`, { email });
+  const { ok, data, status } = await postJSON(
+    `${API_BASE}/reenviar-confirmacao`,
+    { usuarioId }
+  );
 
   if (!ok || !data.sucesso) {
     setMessageConfirm(data.erro || `Falha no reenvio (HTTP ${status}).`, "error");

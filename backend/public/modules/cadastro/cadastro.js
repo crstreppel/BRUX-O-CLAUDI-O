@@ -36,20 +36,29 @@ async function handleCadastro(event) {
     return;
   }
 
-  setMessageCadastro("Enviando dados...", "info");
+  setMessageCadastro("Criando sua conta...", "info");
 
   try {
     const { ok, data, status } = await postJSON(`${API_BASE}/cadastrar`, {
       usuario, email, senha
     });
 
-    if (!ok) {
-      setMessageCadastro(data.erro || `Erro ao cadastrar (HTTP ${status}).`, "error");
+    if (!ok || !data?.usuarioId) {
+      setMessageCadastro(data?.erro || `Erro ao cadastrar (HTTP ${status}).`, "error");
       return;
     }
 
-    setMessageCadastro("Conta criada! Verifique seu e-mail.", "success");
-    f.reset();
+    // 🔐 Fluxo guiado total PBQE-C:
+    // salva o usuarioId imediatamente e segue direto para confirmação
+    sessionStorage.clear();
+    sessionStorage.setItem("usuarioId", data.usuarioId);
+
+    setMessageCadastro("Conta criada! Redirecionando para confirmação...", "success");
+
+    setTimeout(() => {
+      window.location.href = "/modules/confirmacao/confirmacao.html";
+    }, 300);
+
   } catch {
     setMessageCadastro("Erro interno ao cadastrar.", "error");
   }

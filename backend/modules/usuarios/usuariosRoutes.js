@@ -9,7 +9,7 @@ router.post('/cadastrar', usuarioController.cadastrarUsuario);
 // LOGIN JWT OFICIAL (PBQE-C)
 router.post('/login', loginController.login);
 
-router.get('/confirmar-email', usuarioController.confirmarEmailPorToken);
+// CONFIRMAÇÃO DE E-MAIL (CÓDIGO)
 router.post('/confirmar-codigo', usuarioController.confirmarEmailPorCodigo);
 router.post('/reenviar-confirmacao', usuarioController.reenviarConfirmacao);
 

@@ -1,23 +1,26 @@
 // ======================================================================
-// 🧙‍♂️ usuarioController.js • PBQE-C V2 – Módulo Usuários
+// 🧙‍♂️ usuarioController.js • PBQE-C V2 (DEBUG)
 // ----------------------------------------------------------------------
+// DEBUG ativo em confirmarEmailPorCodigo
+// ======================================================================
+
 const Usuario = require('./usuarioModel');
 const Status = require('../status/statusModel');
 const Role = require('../roles/roleModel');
 const argon2 = require('argon2');
-const { v4: uuidv4 } = require('uuid');
 
 function gerarCodigo() {
   return String(Math.floor(100000 + Math.random() * 900000));
 }
 
-function addHoras(horas) {
+function addMinutos(minutos) {
   const d = new Date();
-  d.setHours(d.getHours() + horas);
+  d.setMinutes(d.getMinutes() + minutos);
   return d;
 }
 
 module.exports = {
+
   async cadastrarUsuario(req, res) {
     try {
       const { usuario, email, senha } = req.body;
@@ -47,84 +50,90 @@ module.exports = {
       }
 
       const senhaHash = await argon2.hash(senha, { type: argon2.argon2id });
-      const emailToken = uuidv4();
       const emailCodigo = gerarCodigo();
-      const emailTokenExpiraEn = addHoras(24);
 
       const user = await Usuario.create({
         usuario,
         email: emailNorm,
         senhaHash,
         emailVerificado: false,
-        emailToken,
-        emailTokenExpiraEn,
         emailCodigo,
         emailCodigoTentativas: 0,
+        emailTokenExpiraEn: addMinutos(15),
         statusId: statusAtivo.id,
         roleId: rolePadrao.id,
         ativo: true
       });
 
       console.log('=== SIMULAÇÃO DE EMAIL ===');
-      console.log('Link:', `/api/usuarios/confirmar-email?token=${user.emailToken}`);
       console.log('Código:', user.emailCodigo);
 
       return res.json({
         sucesso: true,
-        mensagem: 'Usuário criado! Verifique o e-mail para confirmar o acesso.',
-        email: user.email,
-        codigo: user.emailCodigo
+        usuarioId: user.id,
+        mensagem: 'Usuário criado! Verifique seu e-mail e informe o código recebido.'
       });
+
     } catch (e) {
       console.error('Erro em cadastrarUsuario:', e);
       return res.status(500).json({ erro: 'Erro interno.' });
     }
   },
 
-  async confirmarEmailPorToken(req, res) {
-    try {
-      const { token } = req.query;
-      if (!token) return res.status(400).json({ erro: 'Token não informado.' });
-      const user = await Usuario.findOne({ where: { emailToken: token } });
-      if (!user) return res.status(400).json({ erro: 'Token inválido.' });
-      if (user.emailVerificado) return res.status(400).json({ erro: 'Email já confirmado.' });
-      if (!user.emailTokenExpiraEn || user.emailTokenExpiraEn < new Date()) {
-        return res.status(400).json({ erro: 'Token expirado.' });
-      }
-      user.emailVerificado = true;
-      user.emailToken = null;
-      user.emailTokenExpiraEn = null;
-      user.emailCodigoTentativas = 0;
-      await user.save();
-      return res.json({ sucesso: true, emailVerificado: true });
-    } catch (e) {
-      console.error('Erro em confirmarEmailPorToken:', e);
-      return res.status(500).json({ erro: 'Erro interno.' });
-    }
-  },
-
   async confirmarEmailPorCodigo(req, res) {
     try {
-      const { email, codigo } = req.body;
-      if (!email || !codigo) return res.status(400).json({ erro: 'Informe email e código.' });
-      const emailNorm = email.trim().toLowerCase();
-      const user = await Usuario.findOne({ where: { email: emailNorm } });
-      if (!user) return res.status(400).json({ erro: 'Email não encontrado.' });
-      if (user.emailVerificado) return res.status(400).json({ erro: 'Email já confirmado.' });
-      if (!user.emailTokenExpiraEn || user.emailTokenExpiraEn < new Date()) {
+      const { usuarioId, codigo } = req.body;
+
+      const user = await Usuario.findByPk(usuarioId);
+
+      console.log('=== DEBUG CONFIRMAÇÃO EMAIL ===');
+      console.log('usuarioId recebido:', usuarioId);
+      console.log('codigo recebido:', codigo);
+      console.log('codigo salvo:', user?.emailCodigo);
+      console.log('expira em:', user?.emailTokenExpiraEn);
+      console.log('agora:', new Date());
+      console.log('tentativas:', user?.emailCodigoTentativas);
+      console.log('emailVerificado:', user?.emailVerificado);
+
+      if (!usuarioId || !codigo) {
+        return res.status(400).json({ erro: 'Dados inválidos.' });
+      }
+
+      if (!user) {
+        return res.status(404).json({ erro: 'Usuário não encontrado.' });
+      }
+
+      if (user.emailVerificado) {
+        return res.json({ sucesso: true, mensagem: 'E-mail já verificado.' });
+      }
+
+      if (!user.emailCodigo || !user.emailTokenExpiraEn) {
+        return res.status(400).json({ erro: 'Código não gerado.' });
+      }
+
+      if (new Date() > user.emailTokenExpiraEn) {
         return res.status(400).json({ erro: 'Código expirado.' });
       }
-      if (user.emailCodigo !== codigo) {
+
+      if (user.emailCodigoTentativas >= 1) {
+        return res.status(403).json({ erro: 'Tentativa excedida.' });
+      }
+
+      if (codigo !== user.emailCodigo) {
         user.emailCodigoTentativas += 1;
         await user.save();
         return res.status(400).json({ erro: 'Código inválido.' });
       }
+
       user.emailVerificado = true;
-      user.emailToken = null;
-      user.emailTokenExpiraEn = null;
+      user.emailVerificadoEm = new Date();
+      user.emailCodigo = null;
       user.emailCodigoTentativas = 0;
+      user.emailTokenExpiraEn = null;
       await user.save();
-      return res.json({ sucesso: true, emailVerificado: true });
+
+      return res.json({ sucesso: true });
+
     } catch (e) {
       console.error('Erro em confirmarEmailPorCodigo:', e);
       return res.status(500).json({ erro: 'Erro interno.' });
@@ -133,24 +142,35 @@ module.exports = {
 
   async reenviarConfirmacao(req, res) {
     try {
-      const { email } = req.body;
-      if (!email) return res.status(400).json({ erro: 'Informe o email.' });
-      const emailNorm = email.trim().toLowerCase();
-      const user = await Usuario.findOne({ where: { email: emailNorm } });
-      if (!user) return res.status(400).json({ erro: 'Email não encontrado.' });
-      if (user.emailVerificado) return res.status(400).json({ erro: 'Email já confirmado.' });
-      user.emailToken = uuidv4();
+      const { usuarioId } = req.body;
+
+      if (!usuarioId) {
+        return res.status(400).json({ erro: 'Usuário inválido.' });
+      }
+
+      const user = await Usuario.findByPk(usuarioId);
+      if (!user) {
+        return res.status(404).json({ erro: 'Usuário não encontrado.' });
+      }
+
+      if (user.emailVerificado) {
+        return res.status(400).json({ erro: 'E-mail já confirmado.' });
+      }
+
       user.emailCodigo = gerarCodigo();
-      user.emailTokenExpiraEn = addHoras(24);
       user.emailCodigoTentativas = 0;
+      user.emailTokenExpiraEn = addMinutos(15);
       await user.save();
-      console.log('=== REENVIO CONFIRMAÇÃO ===');
-      console.log('Link:', `/api/usuarios/confirmar-email?token=${user.emailToken}`);
+
+      console.log('=== SIMULAÇÃO DE EMAIL (REENVIO) ===');
       console.log('Código:', user.emailCodigo);
-      return res.json({ sucesso: true, reenviado: true });
+
+      return res.json({ sucesso: true });
+
     } catch (e) {
       console.error('Erro em reenviarConfirmacao:', e);
       return res.status(500).json({ erro: 'Erro interno.' });
     }
   }
+
 };
