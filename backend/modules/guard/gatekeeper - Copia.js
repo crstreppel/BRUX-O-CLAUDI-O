@@ -1,5 +1,4 @@
 const auth = require('./authMiddleware');
-const status = require('./statusMiddleware');
 const permission = require('./permissionMiddleware');
 
-module.exports = { auth, status, permission };
+module.exports = { auth, permission };

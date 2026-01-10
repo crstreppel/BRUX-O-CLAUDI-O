@@ -2,6 +2,7 @@
 // 🧙‍♂️ loginController.js • PBQE-C V2 – Autenticação (Argon2id)
 // ----------------------------------------------------------------------
 const jwt = require('jsonwebtoken');
+const argon2 = require('argon2');
 const Usuario = require('./usuarioModel');
 const Role = require('../roles/roleModel');
 const Permissao = require('../permissoes/permissaoModel');
@@ -25,7 +26,7 @@ module.exports = {
           {
             model: Role,
             as: 'role',
-            include: [ { model: Permissao, as: 'permissoes' } ]
+            include: [{ model: Permissao, as: 'permissoes' }]
           }
         ]
       });
@@ -50,7 +51,7 @@ module.exports = {
         return res.status(403).json({ erro: 'Usuário sem status válido.' });
       }
 
-      const senhaOk = await usuario.validarSenha(senha);
+      const senhaOk = await argon2.verify(usuario.senhaHash, senha);
       if (!senhaOk) {
         return res.status(401).json({ erro: 'Credenciais inválidas.' });
       }
