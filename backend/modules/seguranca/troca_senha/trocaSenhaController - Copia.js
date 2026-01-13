@@ -34,10 +34,7 @@ module.exports = async function (req, res) {
       statusId: statusAtivo.id
     });
 
-    return res.json({
-      sucesso: true,
-      logout: true
-    });
+    return res.json({ sucesso: true });
   } catch (err) {
     return res.status(500).json({ erro: err.message });
   }

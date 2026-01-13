@@ -54,6 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     Session.setSession({ token: data.token, usuario: data.usuario });
-    window.location.href = '/painel/index.html';
+    window.location.href = '/painel/index';
   });
 });

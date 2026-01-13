@@ -12,6 +12,10 @@ app.use(express.urlencoded({ extended: true }));
 // Arquivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Rotas de páginas protegidas (Painel)
+const painelRoutes = require('./routes/painelRoutes');
+app.use('/painel', painelRoutes);
+
 // Rotas de API (PBQE-C)
 const usuariosRoutes = require('./modules/usuarios/usuariosRoutes');
 const rolesRoutes = require('./modules/roles/roleRoutes');
