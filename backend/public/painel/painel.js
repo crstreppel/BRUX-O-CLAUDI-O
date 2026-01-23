@@ -8,18 +8,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const btnSair = document.querySelector('#btn-sair');
-  if (btnSair) btnSair.addEventListener('click', () => Session.logout());
+  if (btnSair) {
+    btnSair.addEventListener('click', () => Session.logout());
+  }
 
+  // Mapa oficial de navegação do Painel Central
   const navMap = {
     login: '/modules/login/login.html',
     roles: '/modules/roles/roles.html',
-    permissoes: '/modules/permissoes/permissoes.html'
+    permissoes: '/modules/permissoes/permissoes.html',
+    cadastros: '/painel/cadastros.html'
   };
 
   document.querySelectorAll('[data-nav]').forEach(btn => {
     btn.addEventListener('click', () => {
       const key = btn.getAttribute('data-nav');
-      if (navMap[key]) window.location.href = navMap[key];
+      if (navMap[key]) {
+        window.location.href = navMap[key];
+      }
     });
   });
 });

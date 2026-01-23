@@ -69,12 +69,6 @@ const Usuario = sequelize.define("Usuario", {
     field: "role_id"
   },
 
-  entidadeId: {
-    type: DataTypes.UUID,
-    allowNull: true,
-    field: "entidade_id"
-  },
-
   ativo: {
     type: DataTypes.BOOLEAN,
     allowNull: false,

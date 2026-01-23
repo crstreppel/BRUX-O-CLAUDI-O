@@ -12,16 +12,6 @@ app.use(express.urlencoded({ extended: true }));
 // Arquivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 🔒 FORÇAR CARGA DOS MODELS (ANTES DAS ASSOCIAÇÕES)
-require('./modules/usuarios/usuarioModel');
-require('./modules/roles/roleModel');
-require('./modules/permissoes/permissaoModel');
-require('./modules/status/statusModel');
-require('./modules/entidades/entidadesModel');
-
-// Inicialização das associações (AGORA SIM, com models carregados)
-initAssociations();
-
 // Rotas de páginas protegidas (Painel)
 const painelRoutes = require('./routes/painelRoutes');
 app.use('/painel', painelRoutes);
@@ -43,6 +33,9 @@ app.use('/api/seguranca/reset-senha', resetSenhaRoutes);
 app.get('/', (req, res) => {
   res.send('<h1>🔥 Servidor PBQE-C rodando!</h1>');
 });
+
+// Inicialização das associações (APÓS models carregados)
+initAssociations();
 
 // Inicialização com sync do banco
 const PORT = 3000;

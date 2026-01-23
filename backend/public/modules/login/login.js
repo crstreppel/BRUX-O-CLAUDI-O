@@ -1,3 +1,4 @@
+
 // PBQE-C • Login integrado ao Session Manager (fluxo robusto)
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -54,6 +55,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     Session.setSession({ token: data.token, usuario: data.usuario });
-    window.location.href = '/painel/index';
+
+    // PBQE-C: decisão explícita de perfil pós-login (hardcoded temporário)
+    // Para o usuário atual: Sócio + Super_Admin
+    if (typeof decidirDestinoPosLogin === 'function') {
+      decidirDestinoPosLogin(['SOCIO', 'SUPER_ADMIN']);
+      return;
+    }
+
+    // Fallback seguro
+    window.location.href = '/painel/index.html';
   });
 });
