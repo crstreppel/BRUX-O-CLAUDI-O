@@ -1,21 +1,15 @@
-/**
- * entidadesRoutes.js
- * Módulo: Entidades
- * Correção PBQE:
- * - Ajuste do require do authMiddleware
- * - Rota raiz '/' para evitar duplicação
- */
-
 const express = require('express');
 const router = express.Router();
 
 const entidadesController = require('./entidadesController');
-const auth = require('../guard/authMiddleware');
+const authMiddleware = require('../guard/authMiddleware');
 
-// LISTAR entidades
-router.get('/', auth, entidadesController.listar);
+router.use(authMiddleware);
 
-// CRIAR entidade
-router.post('/', auth, entidadesController.criar);
+router.get('/', entidadesController.listar);
+router.post('/', entidadesController.criar);
+router.get('/:id', entidadesController.buscarPorId);
+router.put('/:id', entidadesController.atualizar);
+router.delete('/:id', entidadesController.excluir);
 
 module.exports = router;

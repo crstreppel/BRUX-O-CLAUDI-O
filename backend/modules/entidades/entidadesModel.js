@@ -15,9 +15,51 @@ const Entidade = sequelize.define('Entidade', {
     primaryKey: true,
   },
 
-  nome: {
+  // Antes: nome
+  // Agora: nome_razao (renomeado no model; a coluna será ajustada no banco no próximo passo)
+  nomeRazao: {
     type: DataTypes.STRING(150),
     allowNull: false,
+    field: 'nome_razao',
+  },
+
+  nomeFantasia: {
+    type: DataTypes.STRING(150),
+    allowNull: true,
+    field: 'nome_fantasia',
+  },
+
+  tipoPessoa: {
+    type: DataTypes.STRING(2),
+    allowNull: false,
+    field: 'tipo_pessoa',
+    validate: {
+      isIn: [['PF', 'PJ']],
+    },
+  },
+
+  // PF: CPF completo (11)
+  // PJ: CNPJ base (8)
+  documentoRaiz: {
+    type: DataTypes.STRING(11),
+    allowNull: false,
+    field: 'documento_raiz',
+    validate: {
+      isValidDocumentoRaiz(value) {
+        const v = String(value ?? '').replace(/\D/g, '');
+        const tipo = String(this.tipoPessoa ?? '').toUpperCase();
+
+        if (!v) throw new Error('documento_raiz é obrigatório.');
+
+        if (tipo === 'PF') {
+          if (v.length !== 11) throw new Error('PF exige CPF com 11 dígitos em documento_raiz.');
+        } else if (tipo === 'PJ') {
+          if (v.length !== 8) throw new Error('PJ exige CNPJ base com 8 dígitos em documento_raiz.');
+        } else {
+          throw new Error('tipo_pessoa inválido (use PF ou PJ).');
+        }
+      },
+    },
   },
 
   statusId: {
