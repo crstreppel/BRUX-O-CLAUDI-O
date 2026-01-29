@@ -32,12 +32,14 @@ const rolesRoutes = require('./modules/roles/roleRoutes');
 const permissoesRoutes = require('./modules/permissoes/permissaoRoutes');
 const resetSenhaRoutes = require('./modules/seguranca/reset_senha/resetSenhaRoutes');
 const entidadesRoutes = require('./modules/entidades/entidadesRoutes');
+const enderecosRoutes = require('./modules/enderecos/enderecosRoutes');
 
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/roles', rolesRoutes);
 app.use('/api/entidades', entidadesRoutes);
 app.use('/api/permissoes', permissoesRoutes);
 app.use('/api/seguranca/reset-senha', resetSenhaRoutes);
+app.use('/api/enderecos', enderecosRoutes);
 
 // Rota inicial
 app.get('/', (req, res) => {

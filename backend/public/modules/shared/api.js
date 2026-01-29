@@ -1,19 +1,31 @@
-// PBQE-C • API Fetch Wrapper (sem throw para erro de negócio)
+/*
+  api.js
+  Wrapper HTTP padrão do frontend
+  Correção PBQE-C: injeção de token tokenPetropolitan no header Authorization
+*/
 
 async function apiFetch(url, options = {}) {
+  const token = sessionStorage.getItem('tokenPetropolitan');
+
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(options.headers || {})
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
   const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(options.headers || {})
-    },
-    ...options
+    ...options,
+    headers
   });
 
-  let data = {};
+  let data = null;
   try {
     data = await response.json();
   } catch (e) {
-    data = {};
+    // resposta sem JSON
   }
 
   if (!response.ok) {
@@ -24,7 +36,10 @@ async function apiFetch(url, options = {}) {
     };
   }
 
-  return { ok: true, ...data };
+  return {
+    ok: true,
+    ...data
+  };
 }
 
 window.apiFetch = apiFetch;
