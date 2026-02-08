@@ -1,7 +1,7 @@
 /*
   api.js
   Wrapper HTTP padrão do frontend
-  Correção PBQE-C: injeção de token tokenPetropolitan no header Authorization
+  Correção PBQE-C: retorno do JSON cru (sem envelope)
 */
 
 async function apiFetch(url, options = {}) {
@@ -25,21 +25,17 @@ async function apiFetch(url, options = {}) {
   try {
     data = await response.json();
   } catch (e) {
-    // resposta sem JSON
+    data = null;
   }
 
   if (!response.ok) {
-    return {
-      ok: false,
-      status: response.status,
-      ...data
-    };
+    const error = new Error('API_ERROR');
+    error.status = response.status;
+    error.payload = data;
+    throw error;
   }
 
-  return {
-    ok: true,
-    ...data
-  };
+  return data;
 }
 
 window.apiFetch = apiFetch;

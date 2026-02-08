@@ -1,6 +1,14 @@
 const jwt = require('jsonwebtoken');
 const permission = require('./permissionMiddleware');
 
+// ======================================================================
+// 🧙‍♂️ PBQE-C V2 – Gatekeeper (Auth)
+// ----------------------------------------------------------------------
+// Regra: o mesmo JWT_SECRET deve ser usado para assinar e verificar tokens.
+// Fonte única: config/auth.js
+// ======================================================================
+const JWT_SECRET = require('../../config/auth').jwtSecret;
+
 function auth(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -14,7 +22,7 @@ function auth(req, res, next) {
     return res.status(401).json({ erro: 'Token não informado' });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET || 'segredo_dev', (err, usuario) => {
+  jwt.verify(token, JWT_SECRET, (err, usuario) => {
     if (err) {
       // Token inválido em HTML protegido → redirect
       if (req.originalUrl.startsWith('/painel')) {

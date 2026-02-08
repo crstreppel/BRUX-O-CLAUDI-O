@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('./permissaoController.js');
-const { auth, permission } = require('../guard/gatekeeper.js');
+
+const auth = require('../guard/authMiddleware.js');
+const permission = require('../guard/permissionMiddleware.js');
 
 router.post('/criar', auth, permission('permissoes.criar'), controller.criar);
 router.get('/listar', auth, permission('permissoes.listar'), controller.listar);

@@ -1,9 +1,32 @@
 const Usuario = require('../usuarios/usuarioModel');
 const Status = require('../status/statusModel');
+const AuditoriaEvento = require('../seguranca/auditoriaModel');
+
+async function auditar({ evento, sucesso, usuarioId, email, ip, userAgent, motivo }) {
+  try {
+    await AuditoriaEvento.create({
+      evento,
+      sucesso: !!sucesso,
+      usuarioId: usuarioId || null,
+      email: email || null,
+      ip: ip || null,
+      userAgent: userAgent || null,
+      motivo: motivo || null
+    });
+  } catch (e) {
+    // não derrubar fluxo
+  }
+}
+
+function getIp(req) {
+  return (req.ip || req.connection?.remoteAddress || '').toString();
+}
 
 module.exports = async function (req, res, next) {
   try {
     const isPainel = req.originalUrl.startsWith('/painel');
+    const ip = getIp(req);
+    const userAgent = (req.headers['user-agent'] || '').toString();
 
     if (!req.usuario || !req.usuario.id) {
       if (isPainel) {
@@ -29,6 +52,16 @@ module.exports = async function (req, res, next) {
     }
 
     if (usuario.status.nome === 'TROCA_SENHA') {
+      await auditar({
+        evento: 'TROCA_SENHA_OBRIGATORIA',
+        sucesso: false,
+        usuarioId: usuario.id,
+        email: usuario.email,
+        ip,
+        userAgent,
+        motivo: 'STATUS_TROCA_SENHA'
+      });
+
       if (req.originalUrl.startsWith('/alterar-senha')) {
         return next();
       }

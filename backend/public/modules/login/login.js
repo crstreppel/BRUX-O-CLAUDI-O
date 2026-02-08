@@ -1,20 +1,51 @@
-
 // PBQE-C • Login integrado ao Session Manager (fluxo robusto)
+// Hardening Essencial (PBQE-SEC-001):
+// - Mensagens seguras (sem innerHTML vindo do servidor)
+// - Tratamento correto de erros do apiFetch (que lança exceção em !response.ok)
 
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.querySelector('form');
   const msgEl = document.getElementById('msgLogin');
 
-  function setMsg(html) {
+  function clearMsg() {
     if (!msgEl) return;
-    msgEl.innerHTML = html;
+    msgEl.textContent = '';
+    msgEl.style.display = 'none';
+    // limpa qualquer conteúdo extra
+    while (msgEl.firstChild) msgEl.removeChild(msgEl.firstChild);
+  }
+
+  function showText(text) {
+    if (!msgEl) return;
+    clearMsg();
+    msgEl.textContent = text;
     msgEl.style.display = 'block';
   }
 
-  function clearMsg() {
+  function showEmailNaoVerificado() {
     if (!msgEl) return;
-    msgEl.innerHTML = '';
-    msgEl.style.display = 'none';
+    clearMsg();
+    msgEl.style.display = 'block';
+
+    const p1 = document.createElement('div');
+    p1.textContent = 'Seu e-mail ainda não foi confirmado.';
+    msgEl.appendChild(p1);
+
+    msgEl.appendChild(document.createElement('br'));
+
+    const a1 = document.createElement('a');
+    a1.href = '/modules/confirmacao/confirmacao.html';
+    a1.textContent = 'Confirmar e-mail';
+
+    const sep = document.createTextNode(' | ');
+
+    const a2 = document.createElement('a');
+    a2.href = '/modules/confirmacao/confirmacao.html#reenviar';
+    a2.textContent = 'Reenviar código';
+
+    msgEl.appendChild(a1);
+    msgEl.appendChild(sep);
+    msgEl.appendChild(a2);
   }
 
   form.addEventListener('submit', async (e) => {
@@ -25,32 +56,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const senha = document.querySelector('#loginSenha')?.value;
 
     if (!email || !senha) {
-      setMsg('Email e senha obrigatórios');
+      showText('Email e senha obrigatórios');
       return;
     }
 
-    const data = await apiFetch('/api/usuarios/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, senha })
-    });
+    let data = null;
 
-    if (data.ok === false) {
-      if (data.motivo === 'EMAIL_NAO_VERIFICADO') {
-        setMsg(
-          'Seu e-mail ainda não foi confirmado.<br><br>' +
-          '<a href="/modules/confirmacao/confirmacao.html">Confirmar e-mail</a>' +
-          ' | ' +
-          '<a href="/modules/confirmacao/confirmacao.html#reenviar">Reenviar código</a>'
-        );
+    try {
+      data = await apiFetch('/api/usuarios/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, senha })
+      });
+    } catch (err) {
+      // apiFetch lança Error('API_ERROR') com err.payload quando response !ok
+      const payload = err && err.payload ? err.payload : null;
+
+      if (payload && payload.motivo === 'EMAIL_NAO_VERIFICADO') {
+        showEmailNaoVerificado();
         return;
       }
 
-      setMsg(data.erro || data.mensagem || 'Erro no login');
+      if (payload && (payload.erro || payload.mensagem)) {
+        showText(payload.erro || payload.mensagem);
+        return;
+      }
+
+      // fallback
+      showText('Erro no login');
       return;
     }
 
-    if (!data.token || !data.usuario) {
-      setMsg('Login inválido');
+    // login bem-sucedido
+    if (!data || !data.token || !data.usuario) {
+      showText('Login inválido');
       return;
     }
 

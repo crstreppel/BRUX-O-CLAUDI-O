@@ -15,7 +15,7 @@ const { resolverContextoAtivo } = require('./contextoAtivoService');
 function autorizacao(codigoFuncao) {
   return async function (req, res, next) {
     try {
-      const entidadeId = req.user?.entidadeId;
+      const entidadeId = req.usuario?.entidadeId;
       if (!entidadeId) {
         return res.status(401).json({ erro: 'Entidade não autenticada.' });
       }

@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const controller = require('./roleController.js');
 const rolePermissaoController = require('./rolePermissaoController.js');
-const { auth, permission } = require('../guard/gatekeeper.js');
+
+const auth = require('../guard/authMiddleware.js');
+const permission = require('../guard/permissionMiddleware.js');
 
 router.post('/criar', auth, permission('roles.criar'), controller.criar);
 router.get('/listar', auth, permission('roles.listar'), controller.listar);

@@ -1,11 +1,11 @@
 /* =============================================================
- * 🧙‍♂️ associations.js • Petropolitan V2 • PBQE-C
+ * 🧙‍♂️ associations.js • Config Central • PBQE-C
  * -------------------------------------------------------------
- * Agregador central de associações Sequelize
- * Padrão real do projeto (snapshot validado)
+ * Orquestra as associações por módulo.
+ * Cada domínio mantém seu próprio arquivo de associações.
  * ============================================================= */
 
 module.exports = () => {
-  // ÚNICA associação com arquivo dedicado no projeto
   require('../modules/entidades/associations')();
+  require('../modules/seguranca/associations')();
 };

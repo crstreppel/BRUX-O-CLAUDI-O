@@ -3,6 +3,7 @@
 // ----------------------------------------------------------------------
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../config/connection');
+const Status = require('../status/statusModel');
 
 const Permissao = sequelize.define('Permissao', {
   id: {
@@ -36,6 +37,14 @@ const Permissao = sequelize.define('Permissao', {
   underscored: true,
   paranoid: true,
   deletedAt: 'deleted_at'
+});
+
+// ----------------------------------------------------------------------
+// Associações
+// ----------------------------------------------------------------------
+Permissao.belongsTo(Status, {
+  as: 'status',
+  foreignKey: 'statusId'
 });
 
 module.exports = Permissao;

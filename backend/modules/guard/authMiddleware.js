@@ -1,66 +1,62 @@
+// ======================================================================
+// 🧙‍♂️ authMiddleware.js • PBQE-C – Autenticação JWT (Banco governa em runtime)
+// ----------------------------------------------------------------------
+// Segurança consolidada: token identifica, banco governa.
+// ======================================================================
+
 const jwt = require('jsonwebtoken');
 const Usuario = require('../usuarios/usuarioModel');
 const Role = require('../roles/roleModel');
 const Permissao = require('../permissoes/permissaoModel');
 
-// Segredo JWT centralizado (PBQE-C)
+// Fonte única do segredo JWT
 const JWT_SECRET = require('../../config/auth').jwtSecret;
 
-module.exports = async function (req, res, next) {
+module.exports = async function auth(req, res, next) {
   try {
-    const authHeader = req.headers['authorization'];
+    const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!authHeader) {
       return res.status(401).json({ erro: 'Token não fornecido.' });
     }
 
     const token = authHeader.split(' ')[1];
     if (!token) {
-      return res.status(401).json({ erro: 'Token inválido.' });
+      return res.status(401).json({ erro: 'Token não fornecido.' });
     }
 
-    let decoded;
-    try {
-      decoded = jwt.verify(token, JWT_SECRET);
-    } catch (err) {
-      return res.status(401).json({ erro: 'Token expirado ou inválido.' });
-    }
+    const decoded = jwt.verify(token, JWT_SECRET);
 
+    // 🔎 Banco governa: sempre buscar usuário atual
     const usuario = await Usuario.findByPk(decoded.id, {
-      include: [
-        {
-          model: Role,
-          as: 'role',
-          include: [
-            {
-              model: Permissao,
-              as: 'permissoes'
-            }
-          ]
+      include: {
+        model: Role,
+        as: 'role',
+        include: {
+          model: Permissao,
+          as: 'permissoes'
         }
-      ]
+      }
     });
 
-    if (!usuario) {
-      return res.status(401).json({ erro: 'Usuário não encontrado.' });
-    }
-
-    if (!usuario.ativo) {
-      return res.status(403).json({ erro: 'Usuário inativo.' });
+    if (!usuario || !usuario.ativo) {
+      return res.status(401).json({ erro: 'Usuário inválido ou inativo.' });
     }
 
     const permissoes = usuario.role?.permissoes?.map(p => p.chave) || [];
 
+    // Contexto mínimo confiável para runtime
     req.usuario = {
       id: usuario.id,
+      entidadeId: usuario.entidadeId,
       usuario: usuario.usuario,
       email: usuario.email,
       role: usuario.role?.nome || null,
       permissoes
     };
 
-    return next();
+    next();
   } catch (err) {
-    return res.status(500).json({ erro: err.message });
+    return res.status(401).json({ erro: 'Token inválido.' });
   }
 };

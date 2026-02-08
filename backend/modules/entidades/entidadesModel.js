@@ -38,6 +38,23 @@ const Entidade = sequelize.define('Entidade', {
     },
   },
 
+  // Natureza ontológica da entidade
+  // AGENTE   -> inicia ações, decide, assume papéis
+  // REAGENTE -> não inicia ações; reage a estímulos de um agente
+  natureza: {
+    type: DataTypes.STRING(8),
+    allowNull: false,
+    field: 'natureza',
+    validate: {
+      isIn: [['AGENTE', 'REAGENTE']],
+      isImmutable(value) {
+        if (!this.isNewRecord && this.previous('natureza') !== value) {
+          throw new Error('natureza é imutável após a criação da entidade.');
+        }
+      }
+    }
+  },
+
   // PF: CPF completo (11)
   // PJ: CNPJ base (8)
   documentoRaiz: {

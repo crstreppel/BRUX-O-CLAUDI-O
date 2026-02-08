@@ -3,6 +3,7 @@
 // ----------------------------------------------------------------------
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../config/connection');
+const Status = require('../status/statusModel');
 
 const Role = sequelize.define('Role', {
   id: {
@@ -31,6 +32,15 @@ const Role = sequelize.define('Role', {
   underscored: true,
   paranoid: true,
   deletedAt: 'deleted_at'
+});
+
+// ======================================================================
+// Associações
+// ----------------------------------------------------------------------
+// Role possui um Status (ATIVO, INATIVO, etc.)
+Role.belongsTo(Status, {
+  as: 'status',
+  foreignKey: 'statusId'
 });
 
 module.exports = Role;

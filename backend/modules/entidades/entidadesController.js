@@ -5,11 +5,24 @@ module.exports = {
 
   async criar(req, res) {
     try {
-      const { nome_razao, nome_fantasia, tipo_pessoa, documento_raiz, status_id } = req.body;
+      const {
+        nome_razao,
+        nome_fantasia,
+        tipo_pessoa,
+        documento_raiz,
+        status_id,
+        natureza
+      } = req.body;
 
-      if (!nome_razao || !tipo_pessoa || !documento_raiz || !status_id) {
+      if (!nome_razao || !tipo_pessoa || !documento_raiz || !status_id || !natureza) {
         return res.status(400).json({
-          mensagem: 'Campos obrigatórios: nome_razao, tipo_pessoa, documento_raiz, status_id'
+          mensagem: 'Campos obrigatórios: nome_razao, tipo_pessoa, documento_raiz, status_id, natureza'
+        });
+      }
+
+      if (!['AGENTE', 'REAGENTE'].includes(natureza)) {
+        return res.status(400).json({
+          mensagem: 'natureza inválida. Use AGENTE ou REAGENTE.'
         });
       }
 
@@ -18,7 +31,8 @@ module.exports = {
         nomeFantasia: nome_fantasia || null,
         tipoPessoa: tipo_pessoa,
         documentoRaiz: documento_raiz,
-        statusId: status_id
+        statusId: status_id,
+        natureza
       });
 
       return res.status(201).json(entidade);

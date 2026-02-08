@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const router = express.Router();
 
-const { auth } = require('../modules/guard/gatekeeper.js');
+const auth = require('../modules/guard/authMiddleware.js');
 const statusMiddleware = require('../modules/guard/statusMiddleware.js');
 
 // Todas as rotas abaixo passam por auth + status
